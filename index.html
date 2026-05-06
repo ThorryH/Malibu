@@ -808,6 +808,9 @@ function showView(v) {
 
   $('navBuilder').classList.toggle('active', v==='builder');
 
+  // Always reset theme when returning to landing
+  if (v === 'landing') document.body.className = '';
+
   if (v === 'builder') renderAll();
 }
 
@@ -1826,7 +1829,7 @@ async function saveQuote() {
     id: currentQuoteRowId || Date.now(),
     date: new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}),
     series, model, base, optsTotal,
-    delivery: DELIVERY_CHARGE, discount: discountAmt||0, grand, items,
+    delivery: DELIVERY_CHARGE, discount: discountAmt||0, grand,
     customer: { ...customer },
     snap: JSON.stringify([...sel]),
   };
@@ -1848,6 +1851,7 @@ async function saveQuote() {
         action: 'saveQuote',
         apiKey, sheetId, columnMap,
         quote,
+        items,
         rowId: currentQuoteRowId || null,
         appUrl: siteUrl || window.location.origin,
       })
