@@ -884,8 +884,8 @@ async function loadFromSearch(q) {
     showToast('Quote data not available', 'error');
     return;
   }
+  let parsed = null;
   try {
-    let parsed;
     if (typeof q.quoteJson === 'object' && q.quoteJson !== null) {
       parsed = q.quoteJson;
     } else {
@@ -895,16 +895,18 @@ async function loadFromSearch(q) {
         try { parsed = JSON.parse(JSON.parse(raw)); }
         catch(e2) {
           try { parsed = JSON.parse(raw.replace(/\\"/g, '"').replace(/^"|"$/g, '')); }
-          catch(e3) { throw new Error('All parse attempts failed'); }
+          catch(e3) { parsed = null; }
         }
       }
     }
-    if (!parsed || !parsed.series || !parsed.model) throw new Error('Missing required fields');
-    loadQuoteObject(parsed, q.rowId);
   } catch(e) {
-    console.error('loadFromSearch error:', e, 'raw:', q.quoteJson);
-    showToast('Could not load quote - data may be corrupted', 'error');
+    parsed = null;
   }
+  if (!parsed || !parsed.series || !parsed.model) {
+    showToast('Could not load quote - data may be corrupted', 'error');
+    return;
+  }
+  loadQuoteObject(parsed, q.rowId);
 }
 
 function loadQuoteObject(q, rowId) {
