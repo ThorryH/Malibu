@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Malibu Boats MY26 Pricing</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1f3c; --navy2: #142847;
+    --blue: #1a4fa3; --sky: #2e8bc0; --sky-light: #48b4e0;
+    --gold: #c8922a; --gold-light: #e8b44a;
+    --white: #f0f6ff; --off-white: #d8e8f8;
+    --gray: #8aabcc; --gray-dark: #5a7a99;
+    --surface: #162d50; --surface2: #1c3660;
+    --card: #1e3a68; --card2: #264878;
+    --border: rgba(72,180,224,0.25); --border2: rgba(72,180,224,0.1);
+    --success: #2ec87a; --axis-orange: #e85d20; --axis-orange-light: #ff7a3d;
+    --t-bg: var(--navy); --t-surface: var(--surface); --t-surface2: var(--surface2);
+    --t-card: var(--card); --t-card2: var(--card2);
+    --t-border: var(--border); --t-border2: var(--border2);
+    --t-accent: var(--sky); --t-accent-light: var(--sky-light);
+  }
+  body.theme-axis {
+    --t-bg: #e8e8e8; --t-surface: #d4d4d4; --t-surface2: #c8c8c8;
+    --t-card: #bcbcbc; --t-card2: #adadad;
+    --t-border: rgba(180,0,0,0.3); --t-border2: rgba(180,0,0,0.12);
+    --t-accent: #c00000; --t-accent-light: #e00000;
+    --white: #1a1a1a; --off-white: #2a2a2a;
+    --gray: #444444; --gray-dark: #666666;
+  }
+  body.theme-response {
+    --t-bg: #1a1205; --t-surface: #221808; --t-surface2: #2c1f0a;
+    --t-card: #38270d; --t-card2: #463110;
+    --t-border: rgba(200,146,42,0.3); --t-border2: rgba(200,146,42,0.1);
+    --t-accent: var(--gold); --t-accent-light: var(--gold-light);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  body { font-family:'Barlow',sans-serif; background:var(--t-bg); color:var(--white); min-height:100vh; overflow-x:hidden; transition:background 0.3s; }
+
+  /* ═══════════════════════════════════════════════════════════
+     PASSWORD SCREEN
+  ═══════════════════════════════════════════════════════════ */
+  .pw-screen { position:fixed; inset:0; background:linear-gradient(160deg,#0a1628,#0f2a50); z-index:999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
+  .pw-logo { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:38px; letter-spacing:4px; text-transform:uppercase; color:var(--white); text-align:center; }
+  .pw-sub { font-size:13px; color:var(--sky); letter-spacing:3px; text-transform:uppercase; margin-top:-14px; }
+  .pw-badge { background:linear-gradient(90deg,var(--gold),var(--gold-light)); color:#0a1628; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; letter-spacing:2px; padding:4px 14px; border-radius:2px; text-transform:uppercase; margin-bottom:10px; }
+  .pw-box { background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:28px 32px; width:320px; display:flex; flex-direction:column; gap:14px; }
+  .pw-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; color:var(--gray); text-transform:uppercase; }
+  .pw-input { background:rgba(255,255,255,0.08); border:1px solid var(--border); color:var(--white); font-family:'Barlow',sans-serif; font-size:16px; padding:12px 14px; border-radius:4px; outline:none; width:100%; transition:border 0.2s; }
+  .pw-input:focus { border-color:var(--sky); }
+  .pw-input::placeholder { color:var(--gray-dark); }
+  .pw-btn { background:linear-gradient(90deg,var(--sky),var(--blue)); color:white; border:none; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:15px; letter-spacing:2px; text-transform:uppercase; padding:13px; cursor:pointer; transition:all 0.2s; }
+  .pw-btn:hover { filter:brightness(1.1); }
+  .pw-error { color:#ff6b6b; font-size:12px; text-align:center; display:none; }
+  .pw-error.show { display:block; }
+
+  /* ═══════════════════════════════════════════════════════════
+     HEADER
+  ═══════════════════════════════════════════════════════════ */
+  .header { background:linear-gradient(135deg,var(--t-bg),var(--t-surface)); border-bottom:1px solid var(--t-border); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+  .brand-wrap { display:flex; flex-direction:column; cursor:default; user-select:none; }
+  .brand-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; letter-spacing:2px; text-transform:uppercase; color:var(--white); }
+  .brand-sub { font-size:10px; color:var(--sky); letter-spacing:3px; text-transform:uppercase; font-weight:500; }
+  .header-right { display:flex; align-items:center; gap:8px; }
+  .edition-badge { background:linear-gradient(90deg,var(--gold),var(--gold-light)); color:#0a1628; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; letter-spacing:1.5px; padding:3px 10px; border-radius:2px; text-transform:uppercase; }
+  .nav-btn { background:var(--t-card); border:1px solid var(--t-border); color:var(--gray); font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; padding:6px 12px; border-radius:2px; cursor:pointer; transition:all 0.2s; text-transform:uppercase; }
+  .nav-btn.active { background:var(--sky); border-color:var(--sky); color:white; }
+  .nav-btn-home { background:var(--t-card); border:1px solid var(--t-border); color:var(--gray); font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; padding:6px 12px; border-radius:2px; cursor:pointer; transition:all 0.2s; text-transform:uppercase; }
+  .nav-btn-home:hover { background:var(--t-card2); color:var(--white); }
+
+  /* ═══════════════════════════════════════════════════════════
+     LANDING PAGE — SPLIT SCREEN
+  ═══════════════════════════════════════════════════════════ */
+  .landing-view { display:none; min-height:calc(100vh - 57px); }
+  .landing-view.active { display:grid; grid-template-columns:1fr 1fr; }
+
+  /* Left — Retrieve */
+  .land-left {
+    background:linear-gradient(160deg, var(--navy) 0%, #0a1628 100%);
+    border-right:1px solid var(--border);
+    padding:48px 40px;
+    display:flex; flex-direction:column; gap:0;
+    position:relative; overflow:hidden;
+  }
+  .land-left::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse at 20% 80%, rgba(46,139,192,0.12) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .land-section-eyebrow {
+    font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700;
+    letter-spacing:3px; text-transform:uppercase; color:var(--sky);
+    margin-bottom:10px;
+  }
+  .land-section-title {
+    font-family:'Barlow Condensed',sans-serif; font-weight:900;
+    font-size:32px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--white); line-height:1.1; margin-bottom:8px;
+  }
+  .land-section-sub {
+    font-size:13px; color:var(--gray); line-height:1.5; margin-bottom:28px;
+  }
+
+  .retrieve-input-wrap { position:relative; margin-bottom:12px; }
+  .retrieve-input {
+    width:100%; background:rgba(255,255,255,0.06); border:1px solid var(--border);
+    color:var(--white); font-family:'Barlow',sans-serif; font-size:16px;
+    padding:14px 16px 14px 44px; border-radius:5px; outline:none;
+    transition:border 0.2s, background 0.2s;
+  }
+  .retrieve-input:focus { border-color:var(--sky); background:rgba(255,255,255,0.09); }
+  .retrieve-input::placeholder { color:var(--gray-dark); }
+  .retrieve-input-icon {
+    position:absolute; left:14px; top:50%; transform:translateY(-50%);
+    font-size:16px; color:var(--gray-dark); pointer-events:none;
+  }
+  .retrieve-btn {
+    width:100%; padding:14px; background:linear-gradient(90deg,var(--sky),var(--blue));
+    color:white; border:none; border-radius:5px;
+    font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px;
+    letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:all 0.2s;
+  }
+  .retrieve-btn:hover { filter:brightness(1.1); }
+  .retrieve-btn:disabled { opacity:0.5; cursor:default; }
+
+  /* Search results */
+  .search-results { margin-top:20px; display:flex; flex-direction:column; gap:10px; }
+  .search-result-card {
+    background:var(--t-surface); border:1px solid var(--t-border);
+    border-radius:5px; padding:14px 16px; cursor:pointer;
+    transition:all 0.18s; position:relative;
+  }
+  .search-result-card:hover { background:var(--t-surface2); border-color:var(--sky); }
+  .src-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px; }
+  .src-model { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:16px; letter-spacing:1px; text-transform:uppercase; }
+  .src-total { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:700; color:var(--sky-light); }
+  .src-meta { font-size:11px; color:var(--gray-dark); }
+  .src-series-badge {
+    display:inline-block; font-family:'Barlow Condensed',sans-serif; font-size:10px;
+    font-weight:700; letter-spacing:1px; padding:2px 7px; border-radius:2px;
+    text-transform:uppercase; margin-right:6px;
+  }
+  .src-series-badge.wakesetter { background:rgba(46,139,192,0.2); color:var(--sky); }
+  .src-series-badge.axis { background:rgba(232,93,32,0.2); color:var(--axis-orange); }
+  .src-series-badge.response { background:rgba(200,146,42,0.2); color:var(--gold); }
+  .src-load-btn {
+    margin-top:10px; width:100%; padding:9px; background:var(--sky);
+    color:white; border:none; border-radius:3px;
+    font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px;
+    letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:all 0.15s;
+  }
+  .src-load-btn:hover { filter:brightness(1.1); }
+  .search-no-results {
+    text-align:center; padding:30px 20px; color:var(--gray-dark);
+    font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:1px; text-transform:uppercase;
+  }
+  .search-spinner {
+    text-align:center; padding:20px; color:var(--gray-dark);
+    font-size:12px; letter-spacing:1px; text-transform:uppercase;
+    font-family:'Barlow Condensed',sans-serif;
+  }
+  .search-error {
+    padding:12px 14px; background:rgba(255,80,80,0.1); border:1px solid rgba(255,80,80,0.3);
+    border-radius:4px; color:#ff8080; font-size:12px; margin-top:12px;
+  }
+
+  /* Right — New Quote */
+  .land-right {
+    background:linear-gradient(160deg, #0e1e3a 0%, var(--surface) 100%);
+    padding:48px 40px;
+    display:flex; flex-direction:column; gap:0;
+    position:relative; overflow:hidden;
+  }
+  .land-right::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(ellipse at 80% 20%, rgba(200,146,42,0.08) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .land-right .land-section-eyebrow { color:var(--gold); }
+  .new-quote-form { display:flex; flex-direction:column; gap:12px; position:relative; z-index:1; }
+  .nq-field { display:flex; flex-direction:column; gap:5px; }
+  .nq-label {
+    font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700;
+    letter-spacing:2px; color:var(--gray-dark); text-transform:uppercase;
+  }
+  .nq-label span { color:#ff6b6b; }
+  .nq-input {
+    background:rgba(255,255,255,0.06); border:1px solid var(--t-border);
+    color:var(--white); font-family:'Barlow',sans-serif; font-size:14px;
+    padding:11px 13px; border-radius:4px; outline:none; transition:border 0.2s, background 0.2s;
+  }
+  .nq-input:focus { border-color:var(--gold); background:rgba(255,255,255,0.09); }
+  .nq-input::placeholder { color:var(--gray-dark); }
+  .nq-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .nq-start-btn {
+    margin-top:8px; padding:15px; width:100%;
+    background:linear-gradient(90deg,var(--gold),var(--gold-light));
+    color:#0a1628; border:none; border-radius:5px;
+    font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:15px;
+    letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:all 0.2s;
+  }
+  .nq-start-btn:hover { filter:brightness(1.08); transform:translateY(-1px); box-shadow:0 4px 16px rgba(200,146,42,0.3); }
+  .nq-error { color:#ff6b6b; font-size:11px; margin-top:-6px; display:none; }
+  .nq-error.show { display:block; }
+
+  /* SS config notice on landing */
+  .ss-config-notice {
+    margin-top:16px; padding:10px 13px;
+    background:rgba(200,146,42,0.08); border:1px solid rgba(200,146,42,0.2);
+    border-radius:4px; font-size:11px; color:var(--gold); line-height:1.5;
+    position:relative; z-index:1;
+  }
+  .ss-config-notice a { color:var(--gold-light); cursor:pointer; text-decoration:underline; }
+
+  /* ═══════════════════════════════════════════════════════════
+     SERIES TABS
+  ═══════════════════════════════════════════════════════════ */
+  .series-tabs { display:flex; background:var(--t-surface); border-bottom:1px solid var(--t-border2); }
+  .series-tab { flex:1; padding:13px 16px; text-align:center; cursor:pointer; border-bottom:3px solid transparent; transition:all 0.25s; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gray); white-space:nowrap; }
+  .series-tab.wakesetter.active { border-color:var(--sky); color:var(--sky); background:rgba(72,180,224,0.08); }
+  .series-tab.axis.active { border-color:var(--axis-orange); color:var(--axis-orange); background:rgba(232,93,32,0.08); }
+  .series-tab.response.active { border-color:var(--gold); color:var(--gold); background:rgba(200,146,42,0.08); }
+
+  /* ═══════════════════════════════════════════════════════════
+     MODEL SELECTOR
+  ═══════════════════════════════════════════════════════════ */
+  .model-selector { background:var(--t-surface2); padding:11px 18px; border-bottom:1px solid var(--t-border2); display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; align-items:center; }
+  .model-selector::-webkit-scrollbar { display:none; }
+  .model-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:2px; color:var(--gray-dark); text-transform:uppercase; white-space:nowrap; }
+  .model-chip { padding:7px 16px; border-radius:3px; border:1px solid var(--t-border); background:var(--t-card); color:var(--gray); font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; letter-spacing:1px; cursor:pointer; transition:all 0.2s; white-space:nowrap; flex-shrink:0; }
+  .model-chip:hover { background:var(--t-card2); color:var(--white); }
+  .model-chip.wakesetter.active { background:var(--sky); border-color:var(--sky); color:white; }
+  .model-chip.axis.active { background:var(--axis-orange); border-color:var(--axis-orange); color:white; }
+  .model-chip.response.active { background:var(--gold); border-color:var(--gold); color:#0a1628; }
+
+  /* ═══════════════════════════════════════════════════════════
+     MAIN BUILDER
+  ═══════════════════════════════════════════════════════════ */
+  .main { display:grid; grid-template-columns:1fr 360px; min-height:calc(100vh - 116px); background:var(--t-bg); }
+  .options-panel { overflow-y:auto; max-height:calc(100vh - 116px); }
+  .category-block { border-bottom:1px solid var(--t-border2); }
+  .category-header { display:flex; align-items:center; padding:11px 18px; cursor:pointer; background:var(--t-surface); gap:10px; user-select:none; transition:background 0.15s; }
+  .category-header:hover { background:var(--t-surface2); }
+  .category-title { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--t-accent-light); flex:1; }
+  .category-count { font-size:11px; color:var(--gray-dark); background:var(--t-card); padding:2px 8px; border-radius:10px; font-weight:500; }
+  .category-count.has-sel { background:var(--t-accent); color:white; }
+  .category-chevron { color:var(--gray-dark); transition:transform 0.2s; font-size:12px; }
+  .category-block.collapsed .category-chevron { transform:rotate(-90deg); }
+  .category-items { display:flex; flex-direction:column; }
+  .category-block.collapsed .category-items { display:none; }
+  .option-row { display:flex; align-items:center; padding:9px 18px 9px 26px; gap:9px; border-top:1px solid var(--t-border2); cursor:pointer; transition:background 0.15s; }
+  .option-row:hover { background:rgba(255,255,255,0.04); }
+  .option-row.selected { background:rgba(72,180,224,0.1); }
+  .option-row.selected.axis-brand { background:rgba(232,93,32,0.1); }
+  .option-row.selected.response-brand { background:rgba(200,146,42,0.1); }
+  .option-row.na { opacity:0.28; pointer-events:none; }
+  .option-row.locked { cursor:default; }
+  .option-row.locked:hover { background:rgba(72,180,224,0.1); }
+  .opt-cb { width:20px; height:20px; border:2px solid var(--t-border); border-radius:3px; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s; background:var(--t-card); }
+  .option-row.selected .opt-cb { background:var(--sky); border-color:var(--sky); }
+  .option-row.selected.axis-brand .opt-cb { background:var(--axis-orange); border-color:var(--axis-orange); }
+  .option-row.selected.response-brand .opt-cb { background:var(--gold); border-color:var(--gold); }
+  .option-row.locked .opt-cb { opacity:0.6; }
+  .chk { display:none; font-size:11px; color:white; font-weight:900; }
+  .option-row.selected .chk { display:block; }
+  .opt-name { flex:1; font-size:13px; color:var(--off-white); line-height:1.3; }
+  .opt-price { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:15px; color:var(--t-accent-light); white-space:nowrap; min-width:64px; text-align:right; }
+  .opt-price.neg { color:var(--success); }
+  .std-badge { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; color:var(--gray-dark); background:var(--t-card); padding:2px 7px; border-radius:2px; border:1px solid var(--t-border2); }
+  .incl-badge { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; color:var(--success); background:rgba(46,200,122,0.1); padding:2px 7px; border-radius:2px; border:1px solid rgba(46,200,122,0.25); }
+  .qty-wrap { display:flex; align-items:center; gap:5px; flex-shrink:0; }
+  .qty-btn { width:24px; height:24px; border-radius:3px; border:1px solid var(--t-border); background:var(--t-card); color:var(--white); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; flex-shrink:0; line-height:1; padding:0; }
+  .qty-btn:hover { background:var(--t-card2); }
+  .qty-num { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; min-width:14px; text-align:center; }
+
+  /* ═══════════════════════════════════════════════════════════
+     QUOTE PANEL
+  ═══════════════════════════════════════════════════════════ */
+  .quote-panel { background:var(--t-surface); border-left:1px solid var(--t-border); display:flex; flex-direction:column; max-height:calc(100vh - 116px); position:sticky; top:116px; }
+  .quote-header { padding:13px 18px 11px; border-bottom:1px solid var(--t-border); }
+  .quote-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:17px; letter-spacing:2px; text-transform:uppercase; }
+  .quote-model-name { font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:600; letter-spacing:1px; color:var(--t-accent); text-transform:uppercase; margin-top:2px; }
+  .quote-customer-bar {
+    padding:7px 18px; background:var(--t-bg); border-bottom:1px solid var(--t-border2);
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  .qcb-name { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; color:var(--t-accent-light); letter-spacing:0.5px; }
+  .qcb-meta { font-size:11px; color:var(--gray-dark); }
+  .qcb-edit { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gray-dark); background:var(--t-card); border:1px solid var(--t-border2); padding:3px 9px; border-radius:2px; cursor:pointer; transition:all 0.15s; }
+  .qcb-edit:hover { color:var(--white); background:var(--t-card2); }
+  .quote-items { flex:1; overflow-y:auto; padding:8px 0; }
+  .q-sec-label { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; color:var(--gray-dark); text-transform:uppercase; padding:5px 18px 2px; margin-top:4px; }
+  .q-item { display:flex; justify-content:space-between; align-items:flex-start; padding:5px 18px; gap:8px; border-bottom:1px solid var(--t-border2); }
+  .q-item-name { font-size:12px; color:var(--gray); flex:1; line-height:1.3; }
+  .q-item-price { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; color:var(--off-white); white-space:nowrap; }
+  .q-item-price.neg { color:var(--success); }
+  .q-item.base .q-item-name { color:var(--off-white); font-weight:600; font-size:13px; }
+  .q-item.base .q-item-price { font-size:15px; color:var(--t-accent-light); }
+  .q-item.fixed .q-item-name { color:var(--off-white); font-weight:500; }
+  .discount-row, .disc { display:flex; align-items:center; padding:6px 18px; gap:8px; border-bottom:1px solid var(--t-border2); }
+  .discount-row.hidden, .disc.hidden { display:none !important; }
+  .disc-label { font-size:11px; color:var(--gray-dark); flex:1; font-style:italic; }
+  .disc-input { background:transparent; border:none; border-bottom:1px solid var(--t-border2); color:var(--success); font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; width:90px; text-align:right; outline:none; padding:2px 4px; }
+  .disc-input::placeholder { color:var(--t-border); }
+  .disc-input:focus { border-bottom-color:var(--success); }
+  .quote-totals { border-top:1px solid var(--t-border); padding:11px 18px; background:var(--t-bg); }
+  .tot-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+  .tot-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--gray-dark); }
+  .tot-val { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; color:var(--off-white); }
+  .tot-row.grand { border-top:1px solid var(--t-border); padding-top:8px; margin-top:2px; }
+  .tot-row.grand .tot-label { color:var(--off-white); font-size:12px; }
+  .tot-row.grand .tot-val { font-size:22px; color:var(--sky-light); }
+  .tot-row.grand.axis .tot-val { color:var(--axis-orange-light); }
+  .tot-row.grand.response .tot-val { color:var(--gold-light); }
+  .tot-row.disc .tot-val { color:var(--success); }
+  .quote-actions { padding:10px 14px; display:flex; gap:6px; border-top:1px solid var(--t-border); }
+  .action-btn { flex:1; padding:10px 4px; border:none; border-radius:3px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.2s; }
+  .btn-clear { background:var(--t-card); color:var(--gray); border:1px solid var(--t-border); }
+  .btn-clear:hover { background:var(--t-card2); color:white; }
+  .btn-disc { background:var(--t-card); color:var(--success); border:1px solid rgba(46,200,122,0.3); }
+  .btn-disc:hover { background:rgba(46,200,122,0.15); }
+  .btn-disc.active { background:rgba(46,200,122,0.2); border-color:var(--success); }
+  .btn-save { background:var(--success); color:#0a1628; font-weight:800; }
+  .btn-save:disabled { opacity:0.5; cursor:default; }
+  .btn-print { background:linear-gradient(90deg,var(--sky),var(--blue)); color:white; }
+  .btn-print.axis-brand { background:linear-gradient(90deg,var(--axis-orange),#c23a00); }
+  .btn-print.response-brand { background:linear-gradient(90deg,var(--gold),#a06a10); }
+  .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; height:160px; color:var(--gray-dark); text-align:center; padding:20px; gap:8px; }
+  .empty-icon { font-size:30px; opacity:0.3; }
+  .empty-text { font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:1px; text-transform:uppercase; font-weight:600; }
+
+  /* Save status in button */
+  .save-status { font-size:10px; display:block; font-weight:400; margin-top:1px; opacity:0.8; }
+
+  /* ═══════════════════════════════════════════════════════════
+     PRINT
+  ═══════════════════════════════════════════════════════════ */
+  @media print {
+    body { background:white !important; color:black !important; }
+    .pw-screen,.header,.series-tabs,.model-selector,.options-panel,.quote-actions,.landing-view,.modal-overlay,.settings-panel { display:none !important; }
+    .main { grid-template-columns:1fr; }
+    .quote-panel { position:static; max-height:none; border:none; background:white !important; box-shadow:none; }
+    .quote-customer-bar { background:#eef3f8 !important; }
+    .qcb-name { color:#1a4fa3 !important; }
+    .qcb-meta,.qcb-edit { color:#555 !important; }
+    .quote-totals { background:#eef3f8 !important; }
+    .tot-label { color:#555 !important; }
+    .tot-val { color:#111 !important; }
+    .tot-row.grand .tot-val { color:#1a4fa3 !important; font-size:20px !important; }
+    .tot-row.disc .tot-val { color:#1a8a50 !important; }
+    .q-item-name { color:#333 !important; }
+    .q-item-price { color:#111 !important; }
+    .q-item.base .q-item-name { color:#111 !important; font-weight:700 !important; }
+    .q-item.base .q-item-price { color:#1a4fa3 !important; }
+    .q-item.fixed .q-item-name { color:#111 !important; }
+    .q-sec-label { color:#777 !important; }
+    .quote-items { overflow:visible !important; }
+    .discount-row, .disc { display:none !important; }
+    .print-hdr,.print-cust { display:block !important; }
+  }
+  .print-hdr { display:none; padding:16px 18px 4px; }
+  .print-hdr h1 { font-size:22px; color:#0a1628; font-family:'Barlow Condensed',sans-serif; font-weight:900; letter-spacing:2px; }
+  .print-hdr p { font-size:11px; color:#555; margin-top:2px; }
+  .print-cust { display:none; padding:8px 18px; background:#e8f0f8; margin:6px 16px; font-size:12px; color:#333; border-radius:3px; }
+
+  /* ═══════════════════════════════════════════════════════════
+     MODALS
+  ═══════════════════════════════════════════════════════════ */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.78); z-index:200; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--t-surface); border:1px solid var(--t-border); border-radius:6px; padding:24px; max-width:360px; width:92%; }
+  .modal-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:19px; letter-spacing:2px; text-transform:uppercase; margin-bottom:3px; }
+  .modal-sub { font-size:12px; color:var(--gray-dark); margin-bottom:16px; line-height:1.5; }
+  .modal-field { margin-bottom:10px; }
+  .modal-label { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; color:var(--gray-dark); text-transform:uppercase; margin-bottom:4px; display:block; }
+  .modal-input { width:100%; background:var(--t-card); border:1px solid var(--t-border); color:var(--white); font-family:'Barlow',sans-serif; font-size:14px; padding:9px 11px; border-radius:3px; outline:none; transition:border 0.15s; }
+  .modal-input:focus { border-color:var(--t-accent); }
+  .modal-input::placeholder { color:var(--gray-dark); }
+  .modal-actions { display:flex; gap:8px; margin-top:18px; }
+  .modal-btn { flex:1; padding:11px; border:none; border-radius:3px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+  .modal-cancel { background:var(--t-card); color:var(--gray); border:1px solid var(--t-border); }
+  .modal-save { background:var(--success); color:#0a1628; }
+  .modal-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+  /* ═══════════════════════════════════════════════════════════
+     SETTINGS PANEL
+  ═══════════════════════════════════════════════════════════ */
+  .settings-panel { display:none; position:fixed; bottom:60px; right:14px; background:var(--t-surface); border:1px solid var(--t-border); border-radius:6px; padding:20px; width:300px; z-index:150; box-shadow:0 8px 32px rgba(0,0,0,0.5); }
+  .settings-panel.open { display:block; }
+  .sp-title { font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gray-dark); margin-bottom:14px; }
+  .sp-section { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--t-accent); margin:12px 0 8px; border-top:1px solid var(--t-border2); padding-top:10px; }
+  .sp-field { margin-bottom:10px; }
+  .sp-label { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; color:var(--gray-dark); text-transform:uppercase; margin-bottom:4px; display:block; }
+  .sp-input { width:100%; background:var(--t-card); border:1px solid var(--t-border2); color:var(--white); font-family:'Barlow',sans-serif; font-size:13px; padding:7px 9px; border-radius:3px; outline:none; }
+  .sp-input:focus { border-color:var(--t-accent); }
+  .sp-hint { font-size:10px; color:var(--gray-dark); line-height:1.4; margin-top:3px; }
+  .sp-save { width:100%; margin-top:8px; padding:9px; background:var(--t-accent); color:white; border:none; border-radius:3px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+  .sp-col-grid { display:grid; grid-template-columns:auto 1fr; gap:4px 8px; align-items:center; margin-top:6px; }
+  .sp-col-key { font-family:'Barlow Condensed',sans-serif; font-size:10px; color:var(--gray-dark); letter-spacing:0.5px; white-space:nowrap; }
+  .sp-col-val { background:var(--t-card); border:1px solid var(--t-border2); color:var(--white); font-family:'Barlow',sans-serif; font-size:11px; padding:4px 7px; border-radius:3px; outline:none; width:100%; }
+  .sp-col-val:focus { border-color:var(--t-accent); }
+  .sp-fetch-btn { width:100%; margin-top:6px; padding:7px; background:var(--t-card); color:var(--t-accent-light); border:1px solid var(--t-border); border-radius:3px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:11px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+  .sp-status { font-size:10px; color:var(--success); margin-top:4px; display:none; }
+  .sp-status.show { display:block; }
+  .sp-err { font-size:10px; color:#ff6b6b; margin-top:4px; display:none; }
+  .sp-err.show { display:block; }
+  .sp-diag { font-size:9px; color:var(--gray); background:var(--t-card); border:1px solid var(--t-border2); border-radius:3px; padding:8px; margin-top:6px; white-space:pre-wrap; word-break:break-all; max-height:180px; overflow-y:auto; display:none; line-height:1.5; }
+  .sp-diag.show { display:block; }
+
+  ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-thumb { background:var(--t-border); border-radius:2px; }
+
+  /* ═══════════════════════════════════════════════════════════
+     TOAST NOTIFICATION
+  ═══════════════════════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════════════════
+     DISCOUNT MODAL
+  ═══════════════════════════════════════════════════════════ */
+  .disc-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.78); z-index:300; align-items:center; justify-content:center; }
+  .disc-modal-overlay.open { display:flex; }
+  .disc-modal {
+    background:#0d1f3c; border:1px solid rgba(72,180,224,0.25);
+    border-radius:8px; padding:28px 32px; width:320px;
+    display:flex; flex-direction:column; gap:16px;
+    box-shadow:0 12px 48px rgba(0,0,0,0.6);
+  }
+  .disc-modal-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; letter-spacing:2px; text-transform:uppercase; color:#f0f6ff; }
+  .disc-modal-sub { font-size:12px; color:#8aabcc; line-height:1.5; margin-top:-8px; }
+  .disc-modal-label { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; color:#5a7a99; text-transform:uppercase; margin-bottom:5px; display:block; }
+  .disc-modal-input {
+    width:100%; background:rgba(255,255,255,0.07); border:1px solid rgba(72,180,224,0.25);
+    color:#f0f6ff; font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:700;
+    padding:12px 14px; border-radius:5px; outline:none; transition:border 0.2s;
+    text-align:right;
+  }
+  .disc-modal-input:focus { border-color:#2e8bc0; background:rgba(255,255,255,0.1); }
+  .disc-modal-input::placeholder { color:rgba(90,122,153,0.5); }
+  .disc-modal-preview {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 14px; background:rgba(46,200,122,0.08);
+    border:1px solid rgba(46,200,122,0.2); border-radius:4px;
+  }
+  .disc-modal-preview-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#5a7a99; }
+  .disc-modal-preview-val { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; color:#2ec87a; }
+  .disc-modal-actions { display:flex; gap:8px; margin-top:4px; }
+  .disc-modal-cancel { flex:1; padding:11px; background:rgba(255,255,255,0.05); border:1px solid rgba(72,180,224,0.2); color:#8aabcc; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+  .disc-modal-apply { flex:2; padding:11px; background:linear-gradient(90deg,#2ec87a,#1da862); color:#0a1628; border:none; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:filter 0.2s; }
+  .disc-modal-apply:hover { filter:brightness(1.08); }
+  .disc-modal-clear { padding:11px 14px; background:rgba(255,80,80,0.1); border:1px solid rgba(255,80,80,0.25); color:#ff8080; border-radius:4px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:12px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+  .disc-modal-clear:hover { background:rgba(255,80,80,0.2); }
+
+.toast {
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
+    background:var(--t-surface); border:1px solid var(--t-border);
+    padding:10px 20px; border-radius:5px; font-family:'Barlow Condensed',sans-serif;
+    font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+    z-index:999; transition:transform 0.3s ease; white-space:nowrap;
+    box-shadow:0 4px 20px rgba(0,0,0,0.4);
+  }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.success { border-color:var(--success); color:var(--success); }
+  .toast.error { border-color:#ff6b6b; color:#ff6b6b; }
+  .toast.info { border-color:var(--sky); color:var(--sky-light); }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     PASSWORD SCREEN
+════════════════════════════════════════════════════════════ -->
+<div class="pw-screen" id="pwScreen">
+  <div class="pw-logo">Malibu Boats</div>
+  <div class="pw-sub">MY26 Pricing Tool</div>
+  <div class="pw-badge">Edition 2</div>
+  <div class="pw-box">
+    <div class="pw-label">Enter Password</div>
+    <input class="pw-input" id="pwInput" type="password" placeholder="••••••••••" onkeydown="if(event.key==='Enter')checkPw()" autocomplete="off" />
+    <button class="pw-btn" onclick="checkPw()">Unlock</button>
+    <div class="pw-error" id="pwError">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     MAIN APP
+════════════════════════════════════════════════════════════ -->
+<div id="appWrap" style="display:none">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="brand-wrap" id="brandWrap">
+    <div class="brand-name" id="brandName">Malibu Boats MY26 Pricing</div>
+    <div class="brand-sub">Edition 2 · MSRP Inc. GST</div>
+  </div>
+  <div class="header-right">
+    <div class="edition-badge" id="editionBadge" style="cursor:default;user-select:none;">MY26 Ed.2</div>
+    <button class="nav-btn-home" id="navHome" onclick="showView('landing')" style="display:none">⌂ Home</button>
+    <button class="nav-btn active" id="navBuilder" onclick="showView('builder')" style="display:none">Builder</button>
+    <button class="nav-btn" id="navSaved" onclick="showView('saved')" style="display:none">Saved</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     LANDING — SPLIT SCREEN
+════════════════════════════════════════════════════════════ -->
+<div class="landing-view active" id="landingView">
+
+  <!-- LEFT: Retrieve existing quote -->
+  <div class="land-left">
+    <div class="land-section-eyebrow">Existing Customer</div>
+    <div class="land-section-title">Retrieve<br>a Quote</div>
+    <div class="land-section-sub">Enter a customer's mobile number to find all their saved quotes.</div>
+
+    <div class="retrieve-input-wrap">
+      <span class="retrieve-input-icon">📱</span>
+      <input class="retrieve-input" id="retrieveMobile" type="tel" placeholder="04xx xxx xxx"
+        oninput="clearSearchResults()" onkeydown="if(event.key==='Enter')searchQuotes()" />
+    </div>
+    <button class="retrieve-btn" id="retrieveBtn" onclick="searchQuotes()">Search Quotes</button>
+
+    <div id="searchResults"></div>
+    <div id="ssNoticeLeft" class="ss-config-notice" style="display:none">
+      ⚠ Smartsheet not configured. <a onclick="openSettings()">Open Settings</a> to connect.
+    </div>
+  </div>
+
+  <!-- RIGHT: New quote -->
+  <div class="land-right">
+    <div class="land-section-eyebrow">New Customer</div>
+    <div class="land-section-title">Start a<br>New Quote</div>
+    <div class="land-section-sub">Enter the customer's details to begin building their quote.</div>
+
+    <div class="new-quote-form">
+      <div class="nq-field">
+        <label class="nq-label">Full Name <span>*</span></label>
+        <input class="nq-input" id="nqName" type="text" placeholder="e.g. John Smith" />
+        <div class="nq-error" id="nqNameErr">Name is required</div>
+      </div>
+      <div class="nq-row">
+        <div class="nq-field">
+          <label class="nq-label">Email</label>
+          <input class="nq-input" id="nqEmail" type="email" placeholder="john@example.com" />
+        </div>
+        <div class="nq-field">
+          <label class="nq-label">Postcode</label>
+          <input class="nq-input" id="nqPostcode" type="text" placeholder="2000" maxlength="4" />
+        </div>
+      </div>
+      <div class="nq-field">
+        <label class="nq-label">Mobile Number <span>*</span></label>
+        <input class="nq-input" id="nqMobile" type="tel" placeholder="04xx xxx xxx" />
+        <div class="nq-error" id="nqMobileErr">Mobile number is required</div>
+      </div>
+      <button class="nq-start-btn" onclick="startNewQuote()">Start Quote →</button>
+    </div>
+
+    <div id="ssNoticeRight" class="ss-config-notice" style="display:none; margin-top:16px;">
+      ⚠ Smartsheet not configured. Quotes will not save until <a onclick="openSettings()">Settings</a> are connected.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     BUILDER VIEW
+════════════════════════════════════════════════════════════ -->
+<div id="builderView" style="display:none">
+  <div class="series-tabs">
+    <div class="series-tab wakesetter active" onclick="setSeries('wakesetter')">⚡ Wakesetter</div>
+    <div class="series-tab axis" onclick="setSeries('axis')">🔥 Axis</div>
+    <div class="series-tab response" onclick="setSeries('response')">🎿 Response</div>
+  </div>
+  <div class="model-selector" id="modelSelector"></div>
+  <div class="main">
+    <div class="options-panel" id="optionsPanel"></div>
+    <div class="quote-panel">
+      <div class="print-hdr"><h1 id="printBrand">Malibu Boats MY26 Pricing</h1><p id="printDate"></p></div>
+      <div class="print-cust" id="printCust"></div>
+      <div class="quote-header">
+        <div class="quote-title">Customer Quote</div>
+        <div class="quote-model-name" id="quoteModelName">Select a model to begin</div>
+      </div>
+      <!-- Customer bar — shows who this quote is for -->
+      <div class="quote-customer-bar" id="quoteCustomerBar">
+        <div>
+          <div class="qcb-name" id="qcbName">—</div>
+          <div class="qcb-meta" id="qcbMeta"></div>
+        </div>
+        <button class="qcb-edit" onclick="openEditCustomerModal()">Edit</button>
+      </div>
+      <div class="quote-items" id="quoteItems">
+        <div class="empty-state"><div class="empty-icon">⛵</div><div class="empty-text">Select a model &amp; options<br>to build your quote</div></div>
+      </div>
+      <div class="quote-totals" id="quoteTotals" style="display:none">
+        <div class="tot-row"><div class="tot-label">Base Price</div><div class="tot-val" id="baseTotal">—</div></div>
+        <div class="tot-row"><div class="tot-label">Options</div><div class="tot-val" id="optionsTotal">—</div></div>
+        <div class="tot-row"><div class="tot-label">Delivery &amp; PDI</div><div class="tot-val" id="deliveryTotal">+$2,500</div></div>
+        <div class="tot-row disc hidden" id="discRow"><div class="tot-label">Adjustment</div><div class="tot-val neg" id="discTotal">—</div></div>
+        <div class="tot-row grand" id="grandRow">
+          <div class="tot-label">Total MSRP (inc. GST)</div>
+          <div class="tot-val" id="grandTotal">—</div>
+        </div>
+      </div>
+      <div class="quote-actions">
+        <button class="action-btn btn-clear" onclick="clearAll()">Clear</button>
+        <button class="action-btn btn-save" id="saveBtn" onclick="saveQuote()">
+          Save
+          <span class="save-status" id="saveStatus"></span>
+        </button>
+        <button class="action-btn btn-print" id="printBtn" onclick="printQuote()">Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SAVED VIEW (kept for potential legacy use, hidden from nav) -->
+<div id="savedView" style="display:none"></div>
+
+</div><!-- /appWrap -->
+<!-- ════════════════════════════════════════════════════════════
+     $$ ADJUSTMENT MODAL (hidden — triple-tap MY26 Ed.2 badge)
+════════════════════════════════════════════════════════════ -->
+<div class="disc-modal-overlay" id="discModalOverlay">
+  <div class="disc-modal">
+    <div class="disc-modal-title">$$ Adjustment</div>
+    <div class="disc-modal-sub">Enter a dollar adjustment to apply to the grand total. Set to 0 or clear to remove.</div>
+    <div>
+      <label class="disc-modal-label">Adjustment Amount ($)</label>
+      <input class="disc-modal-input" id="discModalInput" type="number" placeholder="0.00" min="0" step="50"
+        oninput="discModalPreview()" onkeydown="if(event.key==='Enter')applyDiscountModal()" />
+    </div>
+    <div class="disc-modal-preview">
+      <span class="disc-modal-preview-label">Applied to Grand Total</span>
+      <span class="disc-modal-preview-val" id="discModalPreviewVal">—</span>
+    </div>
+    <div class="disc-modal-actions">
+      <button class="disc-modal-cancel" onclick="closeDiscountModal()">Cancel</button>
+      <button class="disc-modal-clear" onclick="clearDiscount()">Clear</button>
+      <button class="disc-modal-apply" onclick="applyDiscountModal()">Apply →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     EDIT CUSTOMER MODAL
+════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="editCustomerModal">
+  <div class="modal">
+    <div class="modal-title">Edit Customer</div>
+    <div class="modal-sub">Update customer details for this quote.</div>
+    <div class="modal-field"><label class="modal-label">Full Name *</label><input class="modal-input" id="ecName" type="text" placeholder="Full Name" /></div>
+    <div class="modal-row">
+      <div class="modal-field"><label class="modal-label">Email</label><input class="modal-input" id="ecEmail" type="email" placeholder="Email" /></div>
+      <div class="modal-field"><label class="modal-label">Postcode</label><input class="modal-input" id="ecPostcode" type="text" placeholder="2000" maxlength="4" /></div>
+    </div>
+    <div class="modal-field"><label class="modal-label">Mobile *</label><input class="modal-input" id="ecMobile" type="tel" placeholder="04xx xxx xxx" /></div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-cancel" onclick="closeEditCustomerModal()">Cancel</button>
+      <button class="modal-btn modal-save" onclick="saveEditCustomer()">Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     SETTINGS PANEL (triple-tap brand name)
+════════════════════════════════════════════════════════════ -->
+<div class="settings-panel" id="settingsPanel">
+  <div class="sp-title">⚙ Settings</div>
+
+  <div class="sp-section">Smartsheet Connection</div>
+  <div class="sp-field">
+    <label class="sp-label">Smartsheet API Key</label>
+    <input class="sp-input" id="spApiKey" type="password" placeholder="Paste your API token here" autocomplete="off" />
+    <div class="sp-hint">From Smartsheet: Account → Personal Settings → API Access → Generate Token.</div>
+  </div>
+  <div class="sp-field">
+    <label class="sp-label">Sheet ID</label>
+    <input class="sp-input" id="spSheetId" type="text" placeholder="e.g. 5757522378968964" />
+    <div class="sp-hint">From Smartsheet: File → Properties → Sheet ID (numbers only).</div>
+  </div>
+  <div class="sp-field">
+    <label class="sp-label">Site URL (for quote links)</label>
+    <input class="sp-input" id="spSiteUrl" type="text" placeholder="https://your-site.netlify.app" />
+    <div class="sp-hint">Your deployed Netlify URL — used to generate shareable quote links.</div>
+  </div>
+  <div class="sp-field">
+    <label class="sp-label">Column Mapping</label>
+    <div class="sp-hint" style="margin-bottom:6px;">Paste the numeric column IDs from your Smartsheet. <a href="#" onclick="fetchColumns()" style="color:var(--sky-light)">Auto-fetch →</a></div>
+    <div class="sp-col-grid" id="colGrid"></div>
+  </div>
+  <button class="sp-fetch-btn" onclick="fetchColumns()">↻ Fetch Columns from Sheet</button>
+  <button class="sp-fetch-btn" onclick="testConnection()" style="margin-top:5px;color:var(--gold-light);border-color:rgba(200,146,42,0.3);">⚡ Test Connection (Diagnostic)</button>
+  <div class="sp-status" id="spStatus"></div>
+  <div class="sp-err" id="spErr"></div>
+  <pre class="sp-diag" id="spDiag"></pre>
+  <button class="sp-save" onclick="saveSettings()">Save Settings</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════════════════════
+const CORRECT_PW    = 'wakesetter';
+const DELIVERY_CHARGE = 2500;
+const FUNCTION_URL  = '/.netlify/functions/smartsheet';
+
+// Column keys we need mapped
+const COL_KEYS = [
+  'DATE','SERIES','MODEL','CUSTOMER_NAME','EMAIL','MOBILE','POSTCODE',
+  'BASE_PRICE','OPTIONS_TOTAL','DELIVERY','DISCOUNT','GRAND_TOTAL',
+  'OPTIONS_LIST','QUOTE_LINK','QUOTE_JSON'
+];
+
+// ════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════
+let series   = 'wakesetter';
+let modelIdx = 0;
+let sel      = new Map();
+let collapsed = new Set();
+let discountAmt = 0;
+let brandTapCount = 0, brandTapTimer = null;
+let edgeTapCount = 0, edgeTapTimer = null;
+let currentQuoteRowId = null; // Smartsheet row ID of the currently loaded quote
+
+// Customer for current session
+let customer = { name:'', email:'', mobile:'', postcode:'' };
+
+// Settings (persisted in localStorage as fallback)
+let siteUrl   = '';
+let apiKey    = '';
+let sheetId   = '';
+let columnMap = {}; // { 'DATE': '1234567', 'MODEL': '2345678', ... }
+
+try { const _d = localStorage.getItem('mb_discount'); discountAmt = (_d !== null && _d !== '') ? Math.max(0, Number(_d) || 0) : 0; } catch(e){}
+try { siteUrl  = localStorage.getItem('mb_site_url')||''; } catch(e){}
+try { apiKey   = localStorage.getItem('mb_api_key')||''; } catch(e){}
+try { sheetId  = localStorage.getItem('mb_sheet_id')||''; } catch(e){}
+try { columnMap = JSON.parse(localStorage.getItem('mb_col_map')||'{}'); } catch(e){}
+
+// ════════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+const fmt = v => '$'+Math.abs(v).toLocaleString('en-AU',{minimumFractionDigits:0});
+const fmtFull = v => (v<0?'-':'')+'$'+Math.abs(v).toLocaleString('en-AU',{minimumFractionDigits:0});
+const brand = () => series==='axis'?'axis':series==='response'?'response':'wakesetter';
+
+function showToast(msg, type='info', duration=2800) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => { t.className = 'toast'; }, duration);
+}
+
+function isSsConfigured() {
+  return !!(apiKey && sheetId && Object.keys(columnMap).length >= 5);
+}
+
+// ════════════════════════════════════════════════════════════
+// PASSWORD
+// ════════════════════════════════════════════════════════════
+function checkPw() {
+  const v = $('pwInput').value;
+  if (v === CORRECT_PW) {
+    $('pwScreen').style.display = 'none';
+    $('appWrap').style.display = '';
+    checkSsConfig();
+    // Check if there's a ?q= param (loaded from a quote link)
+    const urlQ = new URLSearchParams(window.location.search).get('q');
+    if (urlQ) {
+      try {
+        const q = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(urlQ)))));
+        loadQuoteObject(q, null);
+        return;
+      } catch(e) { console.warn('Invalid quote link param'); }
+    }
+    showView('landing');
+  } else {
+    $('pwError').classList.add('show');
+    $('pwInput').value = '';
+    $('pwInput').focus();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// SS CONFIG CHECK
+// ════════════════════════════════════════════════════════════
+function checkSsConfig() {
+  const configured = isSsConfigured();
+  $('ssNoticeLeft').style.display  = configured ? 'none' : 'block';
+  $('ssNoticeRight').style.display = configured ? 'none' : 'block';
+}
+
+// ════════════════════════════════════════════════════════════
+// VIEW MANAGEMENT
+// ════════════════════════════════════════════════════════════
+function showView(v) {
+  $('landingView').classList.toggle('active', v==='landing');
+  $('builderView').style.display  = v==='builder' ? '' : 'none';
+  $('savedView').style.display    = 'none';
+
+  $('navHome').style.display    = v !== 'landing' ? '' : 'none';
+  $('navBuilder').style.display = v !== 'landing' ? '' : 'none';
+  $('navSaved').style.display   = 'none'; // hidden — we now use Smartsheet
+
+  $('navBuilder').classList.toggle('active', v==='builder');
+
+  if (v === 'builder') renderAll();
+}
+
+// ════════════════════════════════════════════════════════════
+// LANDING — SEARCH
+// ════════════════════════════════════════════════════════════
+function clearSearchResults() {
+  $('searchResults').innerHTML = '';
+}
+
+async function searchQuotes() {
+  const mobile = $('retrieveMobile').value.trim().replace(/\s+/g,'');
+  if (!mobile) { showToast('Enter a mobile number to search','error'); return; }
+
+  if (!isSsConfigured()) {
+    $('searchResults').innerHTML = '<div class="search-error">Smartsheet not configured. Open Settings (triple-tap the logo) to connect.</div>';
+    return;
+  }
+
+  $('retrieveBtn').disabled = true;
+  $('searchResults').innerHTML = '<div class="search-spinner">⟳ Searching…</div>';
+
+  try {
+    const res = await fetch(FUNCTION_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'searchByMobile', mobile, columnMap, apiKey, sheetId })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Search failed');
+
+    if (!data.quotes || data.quotes.length === 0) {
+      $('searchResults').innerHTML = '<div class="search-no-results">No quotes found for that mobile number.</div>';
+    } else {
+      renderSearchResults(data.quotes);
+    }
+  } catch(err) {
+    $('searchResults').innerHTML = `<div class="search-error">Error: ${err.message}</div>`;
+  } finally {
+    $('retrieveBtn').disabled = false;
+  }
+}
+
+function renderSearchResults(quotes) {
+  const container = $('searchResults');
+  const title = document.createElement('div');
+  title.style.cssText = 'font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray-dark);margin-bottom:10px;margin-top:16px;';
+  title.textContent = `${quotes.length} quote${quotes.length>1?'s':''} found · ${quotes[0].name}`;
+  container.innerHTML = '';
+  container.appendChild(title);
+
+  quotes.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'search-result-card';
+    const seriesClass = (q.series||'wakesetter').toLowerCase();
+    const grandFmt = q.grandTotal ? fmtFull(parseFloat(q.grandTotal)) : '—';
+    card.innerHTML = `
+      <div class="src-top">
+        <div class="src-model">
+          <span class="src-series-badge ${seriesClass}">${seriesClass}</span>${q.model||'—'}
+        </div>
+        <div class="src-total">${grandFmt}</div>
+      </div>
+      <div class="src-meta">${q.date||'—'} · ${q.email||''} · PC ${q.postcode||'—'}</div>
+      <button class="src-load-btn">Load This Quote →</button>
+    `;
+    card.querySelector('.src-load-btn').onclick = () => loadFromSearch(q);
+    container.appendChild(card);
+  });
+}
+
+async function loadFromSearch(q) {
+  if (!q.quoteJson) {
+    showToast('Quote data not available', 'error');
+    return;
+  }
+  let parsed = null;
+  try {
+    if (typeof q.quoteJson === 'object' && q.quoteJson !== null) {
+      parsed = q.quoteJson;
+    } else {
+      let raw = q.quoteJson;
+      try { parsed = JSON.parse(raw); }
+      catch(e1) {
+        try { parsed = JSON.parse(JSON.parse(raw)); }
+        catch(e2) {
+          try { parsed = JSON.parse(raw.replace(/\\"/g, '"').replace(/^"|"$/g, '')); }
+          catch(e3) { parsed = null; }
+        }
+      }
+    }
+  } catch(e) {
+    parsed = null;
+  }
+  if (!parsed || !parsed.series || !parsed.model) {
+    showToast('Could not load quote - data may be corrupted', 'error');
+    return;
+  }
+  loadQuoteObject(parsed, q.rowId);
+}
+
+function loadQuoteObject(q, rowId) {
+  // Restore customer
+  customer = { ...{ name:'', email:'', mobile:'', postcode:'' }, ...(q.customer||{}) };
+  currentQuoteRowId = rowId || null;
+  // Restore series/model/selections
+  series = q.series || 'wakesetter';
+  const models = data[series]?.models || [];
+  modelIdx = models.indexOf(q.model);
+  if (modelIdx < 0) modelIdx = 0;
+  try { sel = new Map(JSON.parse(q.snap||'[]')); } catch(e) { sel = new Map(); autoSelectStd(); }
+  document.body.className = series==='axis'?'theme-axis':series==='response'?'theme-response':'';
+  collapsed.clear();
+  showView('builder');
+  renderAll();
+  showToast(`Quote loaded — ${q.model}`, 'success');
+}
+
+// ════════════════════════════════════════════════════════════
+// LANDING — NEW QUOTE
+// ════════════════════════════════════════════════════════════
+function startNewQuote() {
+  const name   = $('nqName').value.trim();
+  const mobile = $('nqMobile').value.trim().replace(/\s+/g,'');
+  let valid = true;
+
+  $('nqNameErr').classList.remove('show');
+  $('nqMobileErr').classList.remove('show');
+
+  if (!name)   { $('nqNameErr').classList.add('show'); valid=false; }
+  if (!mobile) { $('nqMobileErr').classList.add('show'); valid=false; }
+  if (!valid) return;
+
+  customer = {
+    name,
+    email:    $('nqEmail').value.trim(),
+    mobile,
+    postcode: $('nqPostcode').value.trim(),
+  };
+  currentQuoteRowId = null;
+  series = 'wakesetter'; modelIdx = 0;
+  sel.clear(); collapsed.clear();
+  autoSelectStd();
+  document.body.className = '';
+  showView('builder');
+  renderAll();
+}
+
+// ════════════════════════════════════════════════════════════
+// EDIT CUSTOMER MODAL
+// ════════════════════════════════════════════════════════════
+function openEditCustomerModal() {
+  $('ecName').value     = customer.name;
+  $('ecEmail').value    = customer.email;
+  $('ecMobile').value   = customer.mobile;
+  $('ecPostcode').value = customer.postcode;
+  $('editCustomerModal').classList.add('open');
+  setTimeout(()=>$('ecName').focus(),100);
+}
+function closeEditCustomerModal() { $('editCustomerModal').classList.remove('open'); }
+function saveEditCustomer() {
+  const name   = $('ecName').value.trim();
+  const mobile = $('ecMobile').value.trim().replace(/\s+/g,'');
+  if (!name) { $('ecName').focus(); return; }
+  customer = { name, email:$('ecEmail').value.trim(), mobile, postcode:$('ecPostcode').value.trim() };
+  closeEditCustomerModal();
+  renderCustomerBar();
+}
+
+// ════════════════════════════════════════════════════════════
+// SECRET SETTINGS (triple-tap brand name)
+// ════════════════════════════════════════════════════════════
+function brandTap() {
+  brandTapCount++;
+  clearTimeout(brandTapTimer);
+  brandTapTimer = setTimeout(()=>{ brandTapCount=0; },600);
+  if (brandTapCount >= 3) {
+    brandTapCount = 0;
+    openSettings();
+  }
+}
+function openSettings() {
+  const sp = $('settingsPanel');
+  sp.classList.add('open');
+  $('spApiKey').value  = apiKey;
+  $('spSheetId').value = sheetId;
+  $('spSiteUrl').value = siteUrl;
+  buildColGrid();
+}
+
+// ════════════════════════════════════════════════════════════
+// EDITION BADGE TRIPLE-TAP → $$ ADJUSTMENT MODAL
+// ════════════════════════════════════════════════════════════
+function edgeBadgeTap() {
+  edgeTapCount++;
+  clearTimeout(edgeTapTimer);
+  edgeTapTimer = setTimeout(() => { edgeTapCount = 0; }, 600);
+  if (edgeTapCount >= 3) {
+    edgeTapCount = 0;
+    openDiscountModal();
+  }
+}
+function closeSettings() { $('settingsPanel').classList.remove('open'); }
+
+// (settings panel click-outside handler moved to init block)
+
+function buildColGrid() {
+  const grid = $('colGrid');
+  grid.innerHTML = '';
+  const labels = {
+    DATE:'Date', SERIES:'Series', MODEL:'Model', CUSTOMER_NAME:'Customer Name',
+    EMAIL:'Email', MOBILE:'Mobile', POSTCODE:'Postcode', BASE_PRICE:'Base Price',
+    OPTIONS_TOTAL:'Options Total', DELIVERY:'Delivery', DISCOUNT:'Discount',
+    GRAND_TOTAL:'Grand Total', OPTIONS_LIST:'Options List', QUOTE_LINK:'Quote Link',
+    QUOTE_JSON:'Quote JSON'
+  };
+  COL_KEYS.forEach(k => {
+    const lbl = document.createElement('div');
+    lbl.className = 'sp-col-key';
+    lbl.textContent = labels[k] || k;
+    const inp = document.createElement('input');
+    inp.className = 'sp-col-val';
+    inp.id = `col_${k}`;
+    inp.placeholder = 'Column ID';
+    inp.value = columnMap[k] || '';
+    grid.appendChild(lbl);
+    grid.appendChild(inp);
+  });
+}
+
+async function fetchColumns() {
+  $('spStatus').className = 'sp-status';
+  $('spErr').className = 'sp-err';
+  const currentApiKey  = $('spApiKey').value.trim();
+  const currentSheetId = $('spSheetId').value.trim();
+  if (!currentApiKey || !currentSheetId) {
+    $('spErr').textContent = 'Enter your API Key and Sheet ID first.';
+    $('spErr').classList.add('show');
+    return;
+  }
+  $('spStatus').textContent = '⟳ Fetching columns…';
+  $('spStatus').classList.add('show');
+  try {
+    const res = await fetch(FUNCTION_URL, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'getColumns', apiKey: currentApiKey, sheetId: currentSheetId })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Fetch failed');
+
+    const columns = data.columns || [];
+    const colList = columns.map(c=>`${c.title}: ${c.id}`).join('\n');
+    $('spStatus').textContent = `✓ ${columns.length} columns found. Map IDs below:`;
+
+    const titleToKey = {
+      'date':'DATE','series':'SERIES','model':'MODEL',
+      'customer name':'CUSTOMER_NAME','name':'CUSTOMER_NAME',
+      'email':'EMAIL','mobile':'MOBILE','phone':'MOBILE',
+      'postcode':'POSTCODE','post code':'POSTCODE',
+      'base price':'BASE_PRICE','base':'BASE_PRICE',
+      'options total':'OPTIONS_TOTAL','options':'OPTIONS_TOTAL',
+      'delivery':'DELIVERY','discount':'DISCOUNT',
+      'grand total':'GRAND_TOTAL','total':'GRAND_TOTAL',
+      'options list':'OPTIONS_LIST','options selected':'OPTIONS_LIST',
+      'quote link':'QUOTE_LINK','link':'QUOTE_LINK',
+      'quote json':'QUOTE_JSON','json':'QUOTE_JSON',
+    };
+    columns.forEach(col => {
+      const key = titleToKey[col.title.toLowerCase()];
+      if (key) { columnMap[key] = String(col.id); const inp = $(`col_${key}`); if (inp) inp.value = col.id; }
+    });
+
+    const hint = document.createElement('pre');
+    hint.style.cssText = 'font-size:9px;color:var(--gray-dark);white-space:pre-wrap;margin-top:8px;line-height:1.5;max-height:120px;overflow-y:auto;';
+    hint.textContent = colList;
+    $('colGrid').parentElement.appendChild(hint);
+  } catch(err) {
+    $('spStatus').className = 'sp-status';
+    $('spErr').textContent = `Error: ${err.message}`;
+    $('spErr').classList.add('show');
+  }
+}
+
+async function testConnection() {
+  const statusEl = $('spStatus');
+  const errEl    = $('spErr');
+  const diagEl   = $('spDiag');
+
+  statusEl.textContent = '⟳ Testing connection…';
+  statusEl.className = 'sp-status show';
+  errEl.className = 'sp-err';
+  diagEl.className = 'sp-diag';
+
+  const currentApiKey  = $('spApiKey').value.trim();
+  const currentSheetId = $('spSheetId').value.trim();
+
+  if (!currentApiKey || !currentSheetId) {
+    statusEl.className = 'sp-status';
+    errEl.textContent = '✗ Enter your API Key and Sheet ID above first.';
+    errEl.className = 'sp-err show';
+    return;
+  }
+
+  try {
+    const res = await fetch(FUNCTION_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'ping', apiKey: currentApiKey, sheetId: currentSheetId }),
+    });
+    const data = await res.json();
+
+    if (data.ok) {
+      statusEl.textContent = `✓ Connected — "${data.sheetName}" · ${data.columnCount} columns`;
+      const titleToKey = {
+        'date':'DATE','series':'SERIES','model':'MODEL',
+        'customer name':'CUSTOMER_NAME','name':'CUSTOMER_NAME',
+        'email':'EMAIL','mobile':'MOBILE','phone':'MOBILE',
+        'postcode':'POSTCODE','post code':'POSTCODE',
+        'base price':'BASE_PRICE','base':'BASE_PRICE',
+        'options total':'OPTIONS_TOTAL','options':'OPTIONS_TOTAL',
+        'delivery':'DELIVERY','discount':'DISCOUNT',
+        'grand total':'GRAND_TOTAL','total':'GRAND_TOTAL',
+        'options list':'OPTIONS_LIST','options selected':'OPTIONS_LIST',
+        'quote link':'QUOTE_LINK','link':'QUOTE_LINK',
+        'quote json':'QUOTE_JSON','json':'QUOTE_JSON',
+      };
+      let mapped = 0;
+      (data.columns||[]).forEach(col => {
+        const key = titleToKey[col.title.toLowerCase()];
+        if (key) { columnMap[key] = String(col.id); const inp = $(`col_${key}`); if (inp) { inp.value = col.id; mapped++; } }
+      });
+      if (mapped > 0) statusEl.textContent += ` · ${mapped} columns auto-mapped ✓`;
+      diagEl.textContent = 'COLUMNS FOUND:\n' + (data.columns||[]).map(c => `  ${c.title} → ID: ${c.id}  (${c.type})`).join('\n');
+      diagEl.className = 'sp-diag show';
+    } else {
+      statusEl.className = 'sp-status';
+      errEl.textContent = `✗ ${data.hint || data.error || 'Connection failed'}`;
+      errEl.className = 'sp-err show';
+      diagEl.textContent = JSON.stringify(data, null, 2);
+      diagEl.className = 'sp-diag show';
+    }
+  } catch (err) {
+    statusEl.className = 'sp-status';
+    errEl.textContent = `✗ Network error: ${err.message}`;
+    errEl.className = 'sp-err show';
+  }
+}
+
+function saveSettings() {
+  // Read column map from inputs
+  COL_KEYS.forEach(k => {
+    const inp = $(`col_${k}`);
+    if (inp && inp.value.trim()) columnMap[k] = inp.value.trim();
+  });
+  apiKey   = $('spApiKey').value.trim();
+  sheetId  = $('spSheetId').value.trim();
+  siteUrl  = $('spSiteUrl').value.trim().replace(/\/$/,'');
+  try {
+    localStorage.setItem('mb_col_map',  JSON.stringify(columnMap));
+    localStorage.setItem('mb_api_key',  apiKey);
+    localStorage.setItem('mb_sheet_id', sheetId);
+    localStorage.setItem('mb_site_url', siteUrl);
+  } catch(e){}
+  applyDiscount();
+  closeSettings();
+  checkSsConfig();
+  showToast('Settings saved', 'success');
+}
+
+// ════════════════════════════════════════════════════════════
+// DISCOUNT MODAL
+// ════════════════════════════════════════════════════════════
+function openDiscountModal() {
+  const overlay = $('discModalOverlay');
+  const inp = $('discModalInput');
+  // Always show the current value — show 0 explicitly so user can see and clear it
+  inp.value = discountAmt > 0 ? String(discountAmt) : '';
+  updateDiscPreview();
+  overlay.classList.add('open');
+  setTimeout(() => { inp.focus(); inp.select(); }, 120);
+}
+
+function closeDiscountModal() {
+  $('discModalOverlay').classList.remove('open');
+}
+
+function discModalPreview() { updateDiscPreview(); }
+
+function updateDiscPreview() {
+  const raw = $('discModalInput').value.trim();
+  const parsed = Number(raw);
+  // Show preview: if empty or 0 show no adjustment, else show the deduction
+  if (raw === '' || isNaN(parsed) || parsed === 0) {
+    $('discModalPreviewVal').textContent = 'No adjustment';
+  } else {
+    $('discModalPreviewVal').textContent = '−' + fmt(Math.abs(parsed));
+  }
+}
+
+function applyDiscountModal() {
+  const raw = $('discModalInput').value.trim();
+  // Use Number() — unambiguous: Number('') = 0, Number('0') = 0, Number('500') = 500
+  const parsed = Number(raw);
+  discountAmt = (raw === '' || isNaN(parsed) || parsed < 0) ? 0 : parsed;
+  try { localStorage.setItem('mb_discount', String(discountAmt)); } catch(e){}
+  closeDiscountModal();
+  renderQuote();
+  showToast(discountAmt > 0 ? '−' + fmt(discountAmt) + ' adjustment applied' : 'Adjustment cleared', discountAmt > 0 ? 'success' : 'info');
+}
+
+function clearDiscount() {
+  discountAmt = 0;
+  try { localStorage.setItem('mb_discount', '0'); } catch(e){}
+  closeDiscountModal();
+  renderQuote();
+  showToast('Adjustment cleared', 'info');
+}
+
+function applyDiscount() {
+  // Legacy stub — kept so nothing breaks
+  renderQuote();
+}
+
+// ════════════════════════════════════════════════════════════
+// TRAILER CATEGORIES
+// ════════════════════════════════════════════════════════════
+function makeTrailerCats(n) {
+  const fill = v => Array(n).fill(v);
+  return [
+    { name: 'Trailer — Paint Options', items: [
+      { name: 'Trailer: Gal Only (no paint finish)', msrp: fill(-2623), paintGroup:'trailer' },
+      { name: 'Trailer: Paint Over Gal - Black or White', msrp: fill(0), std: fill(true), paintGroup:'trailer' },
+      { name: 'Trailer: Paint Over Gal - Colour Option', msrp: fill(1089), paintGroup:'trailer' },
+      { name: 'Trailer: Paint Over Gal - Raptor Paint', msrp: fill(905), paintGroup:'trailer' },
+      { name: 'Trailer: Two Tone Paint (Deluxe trailer model only)', msrp: fill(983), paintGroup:'trailer' },
+    ]},
+    { name: 'Trailer — Guard & Step Options', items: [
+      { name: 'Trailer: Deluxe Upgrade - Steps & Premium Soft Grip Decking on Steps & Guards', msrp: fill(2566), naForSeries: ['axis'] },
+      { name: 'Trailer: Diamond Matting - Guards (N/A on Deluxe)', msrp: fill(314) },
+      { name: 'Trailer: Diamond Matting - Steps x4', msrp: fill(0), std: fill(true) },
+    ]},
+    { name: 'Trailer — Brake & Axle Options', items: [
+      { name: 'Trailer: Load Sharing Axles (Rocker Spring)', msrp: fill(1846), stdModels: ['21LX','22LSV','23LSV','23MXZ','T220','A225'], stdPrice: true },
+      { name: 'Trailer: Handbrake', msrp: fill(672) },
+      { name: 'Trailer: Stainless Steel Brake Calipers - 4 x Calipers (Breakaway Models)', msrp: fill(0), std: fill(true) },
+      { name: 'Trailer: Stainless Steel Brake Line Upgrade', msrp: fill(861) },
+    ]},
+    { name: 'Trailer — Decking Options', items: [
+      { name: 'Trailer: Decking - Carpeted Plywood - A-Frame & Sides', msrp: fill(5258) },
+      { name: 'Trailer: Decking - Carpeted Plywood - A-Frame Only', msrp: fill(2539) },
+      { name: 'Trailer: Provision for Decking', msrp: fill(1131) },
+      { name: 'Trailer: Provision for Decking - A-Frame', msrp: fill(637) },
+    ]},
+    { name: 'Trailer — Other Options', items: [
+      { name: 'Trailer: Heavy Duty Upgrade (23LSV & 23MXZ) — Increase ATM to 4,400kg / 70mm hitch', msrp: fill(6870), providesKey:'heavy_duty', naForModels: {'wakesetter':[0,1],'axis':[0,1,2],'response':[0]} },
+      { name: 'Trailer: Tri-Axle — Must have Heavy Duty Option on 23LSV or 23MXZ', msrp: fill(3145), naForModels: {'wakesetter':[0,1],'axis':[0,1,2],'response':[0]} },
+      { name: 'Trailer: DO45 Coupling in lieu of 70mm ball on HD and Tri-Axle trailers', msrp: fill(1461), requiresKey:'heavy_duty' },
+      { name: 'Trailer: Easy Loader Upgrade', msrp: fill(1472) },
+    ]},
+    { name: 'Trailer — Wheel Options', items: [
+      { name: 'Trailer: Wheel Upgrade - 17" Wheels (Std Guards) — All models (Deluxe option required)', msrp: fill(2189), naForSeries: ['axis'] },
+      { name: 'Trailer: Spare Wheel Carrier - Bolt-on', msrp: fill(562), swcGroup:'trailer' },
+      { name: 'Trailer: Spare Wheel Carrier - Drop-Down', msrp: fill(946), swcGroup:'trailer' },
+      { name: 'Trailer: Spare Wheel Carrier - Drop-Down with Hub Assembly', msrp: fill(1719), swcGroup:'trailer' },
+      { name: 'Trailer: Spare Wheel - Mag & Tyre - 15" Breakaway', msrp: fill(1014) },
+      { name: 'Trailer: Spare Wheel - Mag & Tyre - 17" Various Designs', msrp: fill(1335) },
+    ]},
+  ];
+}
+function makeAxisTrailerCats(n) {
+  const fill = v => Array(n).fill(v);
+  return [
+    { name: 'Trailer — Axis Specific Options', items: [
+      { name: 'Trailer: Deluxe Configuration — Includes Rear Steps (Required for 17" Wheel Upgrade)', msrp: fill(4789) },
+      { name: 'Trailer: Wheel Upgrade - 17" Wheels - A200 or T220 (Deluxe required)', msrp: fill(2189) },
+      { name: 'Trailer: Alloy Wheel Upgrade - 15" Alloys (if Deluxe not selected)', msrp: fill(468) },
+      { name: 'Trailer: Spare Wheel - Mag & Tyre - 14" (Axis Models)', msrp: fill(803) },
+    ]},
+  ];
+}
+
+// ════════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════════
+const rawData = {
+  wakesetter: {
+    models: ['20VTX','21LX','22LSV','23LSV','23MXZ'],
+    base: { msrp: [200548,217120,231107,256086,262159] },
+    categories: [
+      { name: 'Engine / Exhaust', items: [
+        { name: 'Engine: Monsoon M5Di (360HP)', msrp:[0,0,0,-9833,-9833], std:[true,true,true,false,false], engineGroup:'ws', swapEngine:'ws' },
+        { name: 'Engine: Monsoon M6Di (430HP)', msrp:[9833,9833,9833,0,0], std:[false,false,false,true,true], engineGroup:'ws', swapEngine:'ws' },
+        { name: 'Engine: Monsoon LT4 Supercharged (607HP)', msrp:[null,null,33400,27450,27450], engineGroup:'ws' },
+        { name: 'Exhaust: Turned-Down Exhaust Tip', msrp:[698,null,null,null,null] },
+        { name: 'Exhaust: Surf Pipe', msrp:[1060,0,0,0,0], std:[false,true,true,true,true] },
+      ]},
+      { name: 'Propeller Upgrade', items: [
+        { name: 'Prop: Torque or Speed Propeller', msrp:[505,505,505,505,505] },
+      ]},
+      { name: 'Gel Coat', items: [
+        { name: 'Gel Coat: Deck Base Colour', msrp:[2887,2887,2887,2887,2887] },
+        { name: 'Gel Coat: Hull Base Colour', msrp:[2674,2674,2674,2674,2674] },
+        { name: 'Gel Coat: Different Metallic Colours on Hull or Deck', msrp:[2039,2039,2039,2039,2039] },
+        { name: 'Gel Coat: Metallic Colours (per Accent)', msrp:[3031,3031,3031,3031,3031], multi:true },
+        { name: 'Gel Coat: Metallic Hull Main', msrp:[6064,6064,6064,6064,6064] },
+        { name: 'Gel Coat: Metallic Platform or Surfgates', msrp:[824,824,824,824,824] },
+        { name: 'Gel Coat: Hull Rear Logo Colour Upgrade', msrp:[379,379,379,379,379] },
+        { name: 'Gel Coat: Hull Side Logo Colour Upgrade', msrp:[546,546,546,546,546] },
+      ]},
+      { name: 'Hardware', items: [
+        { name: 'Hardware: Salt Pack', msrp:[3514,3514,3514,3514,3514] },
+        { name: 'Hardware: AIS Decontamination System', msrp:[1118,1118,1118,1118,1118] },
+        { name: 'Hardware: Pull-up Cleats (per Pair)', msrp:[713,713,713,713,713], multi:true },
+        { name: 'Hardware: Dual Battery with VSR (OPT3)', msrp:[2881,2881,2881,2881,2881] },
+        { name: 'Hardware: Fender Locks (x4)', msrp:[1521,1521,1521,1521,1521] },
+        { name: 'Hardware: Heater - Two Outlet', msrp:[2243,2243,2243,2243,2243], heaterGroup:'wakesetter' },
+        { name: 'Hardware: Heater - Three Outlet', msrp:[null,null,2530,2530,2530], heaterGroup:'wakesetter' },
+        { name: 'Hardware: Wideview Rear Camera', msrp:[1084,1084,1084,1084,1084], wideviewGroup:'ws' },
+        { name: 'Hardware: Wideview Rear and Bow View Camera', msrp:[1354,null,1354,1354,1354], wideviewGroup:'ws' },
+        { name: 'Hardware: Rudder Position Sensor', msrp:[585,585,585,585,585] },
+        { name: 'Hardware: Hot Water Shower', msrp:[1968,null,1968,1968,1968] },
+        { name: 'Hardware: Heated Steering Wheel', msrp:[1264,1264,1264,1264,1264], steerGroup:'ws' },
+        { name: 'Hardware: Heated Electric Steering Wheel', msrp:[5396,5396,5396,5396,5396], steerGroup:'ws' },
+        { name: 'Hardware: Centre Ski Pylon - Base and Pylon', msrp:[3191,null,null,null,null] },
+      ]},
+      { name: 'Interior / Cockpit', items: [
+        { name: 'Interior: Phone Holder with Wireless Charging (Dash & Shifter)', msrp:[1345,1345,1345,1345,1345] },
+        { name: 'Interior: Cool Touch Vinyl (per selection)', msrp:[null,null,1590,1590,1590] },
+        { name: 'Interior: Upgrade Cabin Phone Holders to Wireless Charging', msrp:[null,null,1173,1173,1173] },
+        { name: 'Interior: Deck Track', msrp:[1585,1585,1585,1585,1585] },
+        { name: 'Interior: Driver Seat Heater', msrp:[637,637,637,637,637] },
+        { name: 'Interior: Panoramic Mirror - PTM Billet', msrp:[1528,1528,1528,1528,1528] },
+        { name: 'Interior: Upgrade Soft-Grip Flooring & Seat Base - Dual Layer', msrp:[null,null,541,541,541] },
+        { name: 'Interior: Upgrade Soft-Grip Flooring - Dual Layer', msrp:[417,417,null,null,null] },
+        { name: 'Interior: Upgrade Soft-Grip Storage Compartments - Dual Layer', msrp:[1295,1295,1295,1295,1295] },
+        { name: 'Interior: Soft-Grip - Seat Base', msrp:[689,689,null,null,null] },
+        { name: 'Interior: Soft-Grip - Transom Covering', msrp:[311,311,311,311,311] },
+        { name: 'Interior: Memory and Power-Lift Helm Seat', msrp:[null,null,4118,4118,4118], helmGroup:'ws' },
+        { name: 'Interior: Under Helm Seat Storage', msrp:[703,703,703,703,703], helmGroup:'ws' },
+        { name: 'Interior: Rear Flip-Down Seat Steps', msrp:[null,null,3039,3039,3039] },
+        { name: 'Interior: Bow Cushion Soft Grip', msrp:[752,752,752,752,1129] },
+        { name: 'Interior: Top Stitch Colour Upgrade', msrp:[594,594,594,594,594] },
+        { name: 'Interior: Walk-over Filler Cushion', msrp:[null,null,711,711,711] },
+        { name: 'Interior: Wakeview Seating (Port Side)', msrp:[null,null,1377,null,null] },
+        { name: 'Interior: Max-Pivot Bench Seat', msrp:[null,null,null,7215,7215] },
+        { name: 'Interior: Flip Down Swim Step', msrp:[3554,3554,3554,3554,3554] },
+        { name: 'Interior: Premium Windblock Door', msrp:[null,null,null,3762,3762] },
+      ]},
+      { name: 'Lighting', items: [
+        { name: 'Lighting: LED Docking Lights', msrp:[1019,1583,1583,1583,1583] },
+        { name: 'Interior: RGB Lighting Package', msrp:[null,null,null,4410,4410] },
+        { name: 'Lighting: Under Water Transom Lights (White or Blue)', msrp:[1792,1792,1792,1792,1792] },
+      ]},
+      { name: 'Sound', items: [
+        { name: 'Sound: Subwoofer and Upgraded Amplifier', msrp:[4156,4156,4156,4156,4156] },
+        { name: 'Sound: 2nd Subwoofer with Amplifier', msrp:[null,null,null,4469,4469] },
+        { name: 'Sound: Tower Amplifier Only (2 Channel)', msrp:[3414,3414,3414,3414,3414] },
+        { name: 'Sound: Tower Speakers - ICON 8 - Per Pair', msrp:[2559,2559,2559,2559,2559], multi:true },
+        { name: 'Sound: Tower Speakers - REV 8 - Per Pair', msrp:[2959,2959,2959,2959,2959], multi:true },
+        { name: 'Sound: Tower Speakers - REV 12 - 1st Pair', msrp:[4229,4229,4229,4229,4229] },
+        { name: 'Sound: Tower Speakers - REV 12 - 2nd Pair (Incl. 2nd Amp)', msrp:[6216,6216,6216,6216,6216] },
+        { name: 'Sound: Transom Stereo Remote', msrp:[836,836,836,836,836] },
+      ]},
+      { name: 'Tower', items: [
+        { name: 'Tower: Bimini Top - G5 Tower', msrp:[0,null,null,null,null], std:[true,false,false,false,false], biminiGroup:'ws' },
+        { name: 'Tower: Bimini Top - Gen II Surf with Pistol Hinges', msrp:[1999,0,0,0,0], std:[false,true,true,true,true], biminiGroup:'ws' },
+        { name: 'Tower: Bimini Top - Extended Gen II Surf', msrp:[null,1141,1141,1141,1141], biminiGroup:'ws' },
+        { name: 'Tower: Bimini Top - PTM Dual Coverage (Easy Deploy)', msrp:[null,3256,3256,3256,3256], biminiGroup:'ws' },
+        { name: 'Tower: Colour Upgrade - Tower Only', msrp:[726,726,726,726,726] },
+        { name: 'Tower: Hoop Colour Upgrade - Same as Tower', msrp:[365,365,365,365,365] },
+        { name: 'Tower: Hoop Colour Upgrade - Different to Tower', msrp:[512,512,512,512,512] },
+        { name: 'Tower: Wing Colour Upgrade', msrp:[null,277,277,277,277] },
+        { name: 'Tower: Ascend Pro Tower Upgrade', msrp:[null,null,12969,12969,12969], providesKey:'ascend_pro' },
+        { name: 'Tower: Lights - 360deg Tower Light', msrp:[1757,1757,1757,1757,1757] },
+        { name: 'Tower: Lights - Ascend Lighting', msrp:[null,1213,1213,1213,1213], blockedByKey:'ascend_pro' },
+        { name: 'Tower: Mirror - Tower Mounted PTM Upgrade', msrp:[2568,2568,2568,2568,2568] },
+        { name: 'Tower: Board Rack - Swivel Rack (each)', msrp:[1172,1172,1172,1172,1172], multi:true },
+        { name: 'Tower: Board Rack - Clamping w/Fender Locks (each)', msrp:[4225,4225,4225,4225,4225], multi:true },
+        { name: 'Tower: Board Rack - Clampforce 3.0 (each)', msrp:[5308,5308,5308,5308,5308], multi:true },
+        { name: 'Tower: Board Rack - Edgeforce (each)', msrp:[4690,4690,4690,4690,4690], multi:true },
+        { name: 'Tower: Upgrade Std Rack to Clamping w/Fender Locks (each)', msrp:[3912,3912,3912,3912,3912], multi:true },
+        { name: 'Tower: Upgrade Std Rack to Clampforce 3.0 (each)', msrp:[3340,3340,3340,3340,3340], multi:true },
+        { name: 'Tower: Upgrade Std Rack to Edgeforce (each)', msrp:[2734,2734,2734,2734,2734], multi:true },
+        { name: 'Tower: Surf Tow Point (each)', msrp:[549,549,549,549,549], multi:true },
+        { name: 'Tower: Mister Misty (Ascend Pro only)', msrp:[null,null,2206,2206,2206], requiresKey:'ascend_pro' },
+      ]},
+      { name: 'Wake & Surf Technology', items: [
+        { name: 'Wake Tech: Plug & Play Ready Rear Ballast System w/Auto Vent', msrp:[2027,2027,2027,2027,2027] },
+        { name: 'Wake Tech: Stern Turn (inc. Upgraded 250A Alternator)', msrp:[null,null,9794,9794,9794] },
+        { name: 'Wake Tech: Plug & Play Bags', msrp:[999,999,999,999,999] },
+      ]},
+    ]
+  },
+  axis: {
+    models: ['A200','A225','T220'],
+    base: { msrp: [155138,170550,168609] },
+    categories: [
+      { name: 'Engine / Exhaust', items: [
+        { name: 'Engine: Monsoon M5Di (360HP)', msrp:[0,0,0], std:[true,true,true], engineGroup:'axis' },
+        { name: 'Engine: Monsoon M6Di (430HP)', msrp:[9833,9833,9833], engineGroup:'axis' },
+      ]},
+      { name: 'Underwater Gear', items: [
+        { name: 'Underwater Gear: Torque or Speed Prop Upgrade', msrp:[491,491,491] },
+        { name: 'Underwater Gear: Gorilla Tracking Fin (2nd)', msrp:[609,609,609] },
+      ]},
+      { name: 'Gel Coat', items: [
+        { name: 'Gel Coat: Coloured Base with Pastel Accents', msrp:[3479,3479,3479], axisGelGroup:'axis' },
+        { name: 'Gel Coat: White Base with Metallic Accents', msrp:[5644,5644,5644], axisGelGroup:'axis' },
+        { name: 'Gel Coat: Coloured Base with Metallic Accents', msrp:[9199,9199,9199], axisGelGroup:'axis' },
+      ]},
+      { name: 'Hardware / Interior', items: [
+        { name: 'Hardware: Salt Pack', msrp:[3423,3423,3423] },
+        { name: 'Hardware: Pull Up Cleats (Per Pair)', msrp:[610,610,610], multi:true },
+        { name: 'Hardware: Sports Dash W/Wireless Charging', msrp:[849,849,849] },
+        { name: 'Hardware: Drop-In Cooler', msrp:[579,579,579] },
+        { name: 'Hardware: Depth Finder', msrp:[1209,1209,1209] },
+        { name: 'Hardware: Dual Battery System (OPT2)', msrp:[1739,1739,1739], axisBattGroup:'axis' },
+        { name: 'Hardware: Dual Battery with VSR (OPT3)', msrp:[2806,2806,2806], axisBattGroup:'axis' },
+        { name: 'Hardware: Heater - Two Outlet', msrp:[2184,2184,2184], heaterGroup:'axis' },
+        { name: 'Hardware: Heater - Three Outlet', msrp:[2464,2464,2464], heaterGroup:'axis' },
+        { name: 'Hardware: Ski Pylon', msrp:[744,744,744] },
+        { name: 'Hardware: GPS Speed Control', msrp:[3870,3870,3870] },
+        { name: 'Interior: Bow Cushion Soft Grip', msrp:[733,733,733] },
+        { name: 'Interior: Swivel Helm Seat & Flip Up Bolster Section', msrp:[1023,1023,1023] },
+        { name: 'Interior: Chillax Flip-up Seating (Port side only)', msrp:[null,1669,1669] },
+        { name: 'Interior: Deck Track', msrp:[1386,1386,1386] },
+        { name: 'Interior: Upgrade Cabin Phone Holders to Wireless Charging', msrp:[null,850,850] },
+        { name: 'Interior: Cupholders - Upgrade to Stainless', msrp:[314,314,314] },
+        { name: 'Interior: Wideview Mirror Upgrade', msrp:[539,539,539] },
+        { name: 'Interior: Rear Bench Seat Lean-Backs', msrp:[2823,2823,2823] },
+        { name: 'Interior: Upgrade to Premium Soft Grip Flooring (Dual Layer)', msrp:[406,406,406] },
+        { name: 'Interior: Soft-Grip - Transom Covering', msrp:[303,303,303] },
+        { name: 'Interior: Top Stitch Colour Upgrade', msrp:[579,579,579] },
+      ]},
+      { name: 'Lighting', items: [
+        { name: 'Lighting: LED Docking Lights', msrp:[1541,1541,1541] },
+        { name: 'Lighting: Under Seat Lighting', msrp:[911,911,911] },
+        { name: 'Lighting: Under Water Lighting', msrp:[1439,1439,1439] },
+      ]},
+      { name: 'Sound', items: [
+        { name: 'Sound: Pack 2 - Bow Speakers, 10" Sub, 6 Channel Amp', msrp:[4357,4357,4357] },
+        { name: 'Sound: Tower Speakers - 1st Pair Icon 8 (Pack 2)', msrp:[2433,2433,2433] },
+        { name: 'Sound: Tower Speakers - 2nd Pair Icon 8 (Pack 2)', msrp:[2433,2433,2433] },
+        { name: 'Sound: Pack 3 - 12" Sub, Bow Speakers, 1 Pair Tower Rev10', msrp:[11042,11042,11042] },
+        { name: 'Sound: 2nd Pair Tower Speakers (Pack 3 Rev10)', msrp:[3650,3650,3650] },
+        { name: 'Sound: Transom Remote', msrp:[847,847,847] },
+      ]},
+      { name: 'Tower', items: [
+        { name: 'Tower: Bimini Top - Dual/Extended Coverage', msrp:[1787,1787,1787] },
+        { name: 'Tower: Mirror Bracket - Upgrade to Tower Mounted', msrp:[1596,1596,1596] },
+        { name: 'Tower: Board Rack - Axis Swing Rack (each)', msrp:[913,913,913], multi:true },
+        { name: 'Tower: Board Rack - Clamping Rack (each)', msrp:[4957,4957,4957], multi:true },
+        { name: 'Tower: Board Rack - Edgeforce Rack (each)', msrp:[4107,4107,4107], multi:true },
+        { name: 'Tower: Colour Upgrade (Graphite or White)', msrp:[684,684,684] },
+      ]},
+      { name: 'Wake & Surf Technology', items: [
+        { name: 'Wake Tech: Auto-Set Wedge (replaces Power Wedge III)', msrp:[-4455,-4455,-4455] },
+        { name: 'Wake Tech: Plug & Play Ready Rear & Bow Ballast System w/Auto Vent', msrp:[2729,2729,2729] },
+        { name: 'Wake Tech: Plug & Play Bags', msrp:[1499,1499,1499] },
+      ]},
+    ]
+  },
+  response: {
+    models: ['TXI Open Ed.'],
+    base: { msrp: [144623] },
+    categories: [
+      { name: 'Engine / Other', items: [
+        { name: 'Engine: Monsoon M5Di (360HP)', msrp:[0], std:[true], engineGroup:'resp' },
+        { name: 'Engine: Monsoon M6Di (430HP)', msrp:[9833], engineGroup:'resp' },
+      ]},
+      { name: 'Propeller', items: [
+        { name: 'Prop: Torque or Speed Propeller', msrp:[491] },
+      ]},
+      { name: 'Gel Coat', items: [
+        { name: 'Gel Coat: Deck Base Colour', msrp:[2887] },
+        { name: 'Gel Coat: Hull Base Colour', msrp:[2674] },
+        { name: 'Gel Coat: Metallic Accents - Each', msrp:[3031], multi:true },
+        { name: 'Gel Coat: Metallic Platform', msrp:[824] },
+        { name: 'Gel Coat: Different Metallic Colours', msrp:[2039] },
+        { name: 'Gel Coat: Hull Rear Logo Colour Upgrade', msrp:[379] },
+        { name: 'Gel Coat: Hull Side Logo Colour Upgrade', msrp:[546] },
+      ]},
+      { name: 'Hardware', items: [
+        { name: 'Hardware: Salt Pack', msrp:[3514] },
+        { name: 'Hardware: Pull-up Cleats (Per Pair)', msrp:[667], multi:true },
+        { name: 'Hardware: Dual Battery with Selector', msrp:[2291] },
+        { name: 'Hardware: Hot Water Shower', msrp:[1968] },
+        { name: 'Hardware: Wideview Rear Camera', msrp:[1134], wideviewGroup:'resp' },
+        { name: 'Hardware: Heater - Two Outlet', msrp:[2243], heaterGroup:'response' },
+      ]},
+      { name: 'Interior / Cockpit', items: [
+        { name: 'Interior: Depth Finder', msrp:[1241] },
+        { name: 'Interior: Driver Seat Heater', msrp:[637] },
+        { name: 'Interior: Top Stitch Colour Upgrade', msrp:[594] },
+        { name: 'Interior: Walk-Through Trick Seat', msrp:[1783] },
+        { name: 'Interior: Deck Track', msrp:[1585] },
+        { name: 'Interior: Soft Grip - Flooring - Premium Two-Tone Upgrade', msrp:[469] },
+        { name: 'Interior: Soft Grip - Transom Covering', msrp:[299] },
+        { name: 'Interior: Bow Cushion Soft Grip', msrp:[752] },
+        { name: 'Interior: Rear Seats (pair)', msrp:[2551] },
+        { name: 'Interior: Internal Swivel Ski Rack (per side)', msrp:[1977], multi:true },
+        { name: 'Interior: Side Wall Soft Grip', msrp:[865] },
+        { name: 'Interior: PTM Mirror - Windscreen Mount', msrp:[1528] },
+        { name: 'Interior: GPS Speed Control', msrp:[4294] },
+        { name: 'Interior: Zero-Off GPS Speed Control (3-Event)', msrp:[5424] },
+      ]},
+      { name: 'Lighting', items: [
+        { name: 'Lighting: Docking Lights', msrp:[1324] },
+        { name: 'Lighting: Underwater (White)', msrp:[1792] },
+      ]},
+      { name: 'Tower', items: [
+        { name: 'Tower: TXI Tower (Black) - Tower Only', msrp:[9236] },
+        { name: 'Tower: TXI Tower Colour Upgrade', msrp:[733] },
+        { name: 'Tower: Bimini (Tower)', msrp:[2649] },
+        { name: 'Tower: Racks - Board (each)', msrp:[1065], multi:true },
+        { name: 'Tower: Racks - Ski (each)', msrp:[1065], multi:true },
+      ]},
+      { name: 'Sound', items: [
+        { name: 'Sound: Tower Amplifier (Amp Only)', msrp:[3304] },
+        { name: 'Sound: Tower Speakers - ICON 8 - 1st Pair (BLACK)', msrp:[3223] },
+        { name: 'Sound: Transom Stereo Remote', msrp:[804] },
+      ]},
+      { name: 'Wake Technology', items: [
+        { name: 'Wake Tech: Wedge Plate Only', msrp:[699] },
+        { name: 'Wake Tech: Auto-Set Manual Wedge', msrp:[3718] },
+      ]},
+    ]
+  }
+};
+
+const data = {};
+for (const s in rawData) {
+  const n = rawData[s].models.length;
+  data[s] = { ...rawData[s], categories: [...rawData[s].categories, ...makeTrailerCats(n), ...(s==='axis'?makeAxisTrailerCats(n):[])] };
+}
+
+// ════════════════════════════════════════════════════════════
+// AUTO-SELECT STD
+// ════════════════════════════════════════════════════════════
+function autoSelectStd() {
+  const s = data[series];
+  const modelName = s.models[modelIdx];
+  s.categories.forEach((cat,ci) => {
+    cat.items.forEach((item,ii) => {
+      const key = `${ci}-${ii}`;
+      const isStd = (item.std && item.std[modelIdx]) || (item.stdModels && item.stdModels.includes(modelName));
+      if (isStd && !sel.has(key)) sel.set(key,1);
+    });
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// GROUP STATES
+// ════════════════════════════════════════════════════════════
+function computeGroupStates() {
+  const providedKeys  = new Set();
+  const groupSelected = {};
+  const trackGroup = (groupKey, key) => {
+    if (!groupSelected[groupKey]) groupSelected[groupKey] = [];
+    groupSelected[groupKey].push(key);
+  };
+  const s = data[series];
+  const modelName = s.models[modelIdx];
+  s.categories.forEach((cat,ci) => {
+    cat.items.forEach((item,ii) => {
+      const key = `${ci}-${ii}`;
+      const isStd = (item.std && item.std[modelIdx]) || (item.stdModels && item.stdModels.includes(modelName));
+      const qty = sel.get(key)||0;
+      if (!(qty>0 || isStd)) return;
+      if (item.providesKey)   providedKeys.add(item.providesKey);
+      if (item.heaterGroup)   trackGroup('heater_'+item.heaterGroup, key);
+      if (item.engineGroup)   trackGroup('engine_'+item.engineGroup, key);
+      if (item.wideviewGroup) trackGroup('wideview_'+item.wideviewGroup, key);
+      if (item.steerGroup)    trackGroup('steer_'+item.steerGroup, key);
+      if (item.helmGroup)     trackGroup('helm_'+item.helmGroup, key);
+      if (item.biminiGroup)   trackGroup('bimini_'+item.biminiGroup, key);
+      if (item.swcGroup)      trackGroup('swc_'+item.swcGroup, key);
+      if (item.axisGelGroup)  trackGroup('axisgel_'+item.axisGelGroup, key);
+      if (item.axisBattGroup) trackGroup('axisbatt_'+item.axisBattGroup, key);
+      if (item.paintGroup)    trackGroup('paint_'+item.paintGroup, key);
+    });
+  });
+  return { providedKeys, groupSelected };
+}
+
+// ════════════════════════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════════════════════════
+function renderCustomerBar() {
+  $('qcbName').textContent = customer.name || '—';
+  const parts = [customer.mobile, customer.email, customer.postcode ? 'PC '+customer.postcode : ''].filter(Boolean);
+  $('qcbMeta').textContent = parts.join(' · ');
+}
+
+function renderModelSelector() {
+  const ms = $('modelSelector');
+  ms.innerHTML = '<div class="model-label">Model</div>';
+  data[series].models.forEach((m,i) => {
+    const c = document.createElement('div');
+    c.className = `model-chip ${brand()}${i===modelIdx?' active':''}`;
+    if (series === 'response' && m === 'TXI Open Ed.') {
+      c.innerHTML = `TXI Open Ed.<span style="display:block;font-size:9px;font-weight:600;letter-spacing:0.5px;opacity:0.85;text-transform:none;margin-top:2px;">Official IWWF World Champs Tow Boat</span>`;
+    } else {
+      c.textContent = m;
+    }
+    c.onclick = () => { modelIdx=i; sel.clear(); autoSelectStd(); renderAll(); };
+    ms.appendChild(c);
+  });
+}
+
+function renderOptions() {
+  const panel = $('optionsPanel');
+  panel.innerHTML = '';
+  data[series].categories.forEach((cat,ci) => {
+    const selInCat = cat.items.filter((_,ii) => sel.has(`${ci}-${ii}`)).length;
+    const block = document.createElement('div');
+    block.className = `category-block${collapsed.has(ci)?' collapsed':''}`;
+    const hdr = document.createElement('div');
+    hdr.className = 'category-header';
+    hdr.innerHTML = `<span class="category-title">${cat.name}</span><span class="category-count${selInCat?' has-sel':''}">${selInCat?selInCat+' selected':cat.items.length+' options'}</span><span class="category-chevron">▼</span>`;
+    hdr.onclick = () => { collapsed.has(ci)?collapsed.delete(ci):collapsed.add(ci); renderOptions(); };
+    block.appendChild(hdr);
+    const itemsDiv = document.createElement('div');
+    itemsDiv.className = 'category-items';
+    const { providedKeys, groupSelected } = computeGroupStates();
+    const modelName = data[series].models[modelIdx];
+
+    const isGroupBlocked = (item, key) => {
+      const qty = sel.get(key)||0;
+      if (item.paintGroup) {
+        const isThisStd = item.std && item.std[modelIdx];
+        if (isThisStd) return false;
+        const gk = 'paint_'+item.paintGroup;
+        const members = groupSelected[gk]||[];
+        const otherNonStd = members.some(k => {
+          if (k===key) return false;
+          let found=false;
+          data[series].categories.forEach((cat,ci)=>{ cat.items.forEach((itm,ii)=>{ if(`${ci}-${ii}`===k&&!(itm.std&&itm.std[modelIdx]))found=true; }); });
+          return found;
+        });
+        return otherNonStd && qty===0;
+      }
+      if (item.engineGroup) {
+        const isThisStd = item.std && item.std[modelIdx];
+        if (isThisStd) return false;
+        const gk = 'engine_'+item.engineGroup;
+        const members = groupSelected[gk]||[];
+        const otherNonStd = members.some(k => {
+          if (k===key) return false;
+          let found=false;
+          data[series].categories.forEach((cat,ci)=>{ cat.items.forEach((itm,ii)=>{ if(`${ci}-${ii}`===k&&!(itm.std&&itm.std[modelIdx]))found=true; }); });
+          return found;
+        });
+        return otherNonStd && qty===0;
+      }
+      const checks = [
+        ['heater_',item.heaterGroup],['wideview_',item.wideviewGroup],
+        ['steer_',item.steerGroup],['helm_',item.helmGroup],
+        ['bimini_',item.biminiGroup],['swc_',item.swcGroup],
+        ['axisgel_',item.axisGelGroup],['axisbatt_',item.axisBattGroup],
+      ];
+      for (const [prefix,grpName] of checks) {
+        if (!grpName) continue;
+        const gk = prefix+grpName;
+        const members = groupSelected[gk]||[];
+        if (members.some(k=>k!==key) && qty===0) return true;
+      }
+      return false;
+    };
+
+    cat.items.forEach((item,ii) => {
+      const key = `${ci}-${ii}`;
+      const rawPrice = item.msrp[modelIdx];
+      const isStd = (item.std && item.std[modelIdx]) || (item.stdModels && item.stdModels.includes(modelName));
+      const isLocked = isStd || item.locked===true;
+      const isMulti  = item.multi===true;
+      const qty = sel.get(key)||0;
+      const isSel = qty>0;
+      const bc = brand();
+      const isStdModel = item.stdModels && item.stdModels.includes(modelName);
+      const displayPrice = (item.stdPrice && isStdModel) ? 0 : rawPrice;
+
+      let isNA = rawPrice===null||rawPrice===undefined;
+      let naReason = 'na';
+      if (!isNA && item.naForSeries && item.naForSeries.includes(series)) { isNA=true; }
+      if (!isNA && item.naForModels && item.naForModels[series] && item.naForModels[series].includes(modelIdx)) { isNA=true; }
+      if (!isNA && item.requiresKey && !providedKeys.has(item.requiresKey)) { isNA=true; naReason='dep'; }
+      if (!isNA && item.blockedByKey && providedKeys.has(item.blockedByKey)) { isNA=true; naReason='excl'; }
+      if (!isNA && isGroupBlocked(item,key)) { isNA=true; naReason='excl'; }
+      if (isNA && sel.has(key) && !isStd) sel.delete(key);
+
+      const row = document.createElement('div');
+      row.className = `option-row${isNA?' na':''}${(isSel||isLocked)?` selected ${bc}-brand`:''}${isLocked?' locked':''}`;
+      let pricePart = '';
+      if (isNA && naReason==='dep')    pricePart = '<span class="std-badge" style="color:var(--t-accent);border-color:var(--t-border)">REQUIRES OPTION</span>';
+      else if (isNA && naReason==='excl') pricePart = '<span class="std-badge">EXCL</span>';
+      else if (isNA)                   pricePart = '<span class="std-badge">N/A</span>';
+      else if (displayPrice===0)       pricePart = '<span class="incl-badge">INCL</span>';
+      else pricePart = `<span class="opt-price${displayPrice<0?' neg':''}">${displayPrice<0?'−':'+'}${fmt(Math.abs(displayPrice))}</span>`;
+
+      if (!isLocked && isMulti && !isNA && displayPrice!==0) {
+        row.innerHTML = `<div class="opt-cb"><span class="chk">✓</span></div><div class="opt-name">${item.name}</div><div class="qty-wrap"><button class="qty-btn" onclick="chgQty(event,'${key}',-1)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="chgQty(event,'${key}',1)">+</button></div>${pricePart}`;
+        row.onclick = e => { if(e.target.classList.contains('qty-btn'))return; qty===0?sel.set(key,1):sel.delete(key); renderAll(); };
+      } else if (isLocked) {
+        row.innerHTML = `<div class="opt-cb"><span class="chk">✓</span></div><div class="opt-name">${item.name}</div>${pricePart}`;
+      } else {
+        row.innerHTML = `<div class="opt-cb"><span class="chk">✓</span></div><div class="opt-name">${item.name}</div>${pricePart}`;
+        row.onclick = () => {
+          if (!isNA && !isLocked) {
+            if (sel.has(key)) {
+              sel.delete(key);
+            } else {
+              sel.set(key,1);
+              if (item.swapEngine && series==='wakesetter' && (modelIdx===3||modelIdx===4)) {
+                data[series].categories.forEach((cat2,ci2)=>{ cat2.items.forEach((itm2,ii2)=>{ const k2=`${ci2}-${ii2}`; if(k2!==key&&itm2.swapEngine===item.swapEngine&&sel.has(k2)){ const itm2Std=itm2.std&&itm2.std[modelIdx]; if(!itm2Std)sel.delete(k2); } }); });
+              }
+            }
+            renderAll();
+          }
+        };
+      }
+      itemsDiv.appendChild(row);
+    });
+    block.appendChild(itemsDiv);
+    panel.appendChild(block);
+  });
+}
+
+function chgQty(e,key,d) {
+  e.stopPropagation();
+  const cur=sel.get(key)||0;
+  const nxt=Math.max(0,Math.min(4,cur+d));
+  nxt===0?sel.delete(key):sel.set(key,nxt);
+  renderAll();
+}
+
+function renderQuote() {
+  const s = data[series];
+  const model = s.models[modelIdx];
+  const modelName = s.models[modelIdx];
+  const base = s.base.msrp[modelIdx];
+  const brandLabel = series==='axis'?'Axis Wake Boats':'Malibu Boats';
+  $('quoteModelName').textContent = `${brandLabel} — ${model}`;
+  $('brandName').textContent = series==='axis'?'Axis Wake Boats MY26 Pricing':'Malibu Boats MY26 Pricing';
+
+  let optsTotal=0;
+  const items=[];
+  s.categories.forEach((cat,ci)=>{
+    cat.items.forEach((item,ii)=>{
+      const key=`${ci}-${ii}`;
+      const qty=sel.get(key)||0;
+      if(qty>0){
+        const isStdMdl=item.stdModels&&item.stdModels.includes(modelName);
+        const p=(item.stdPrice&&isStdMdl)?0:item.msrp[modelIdx];
+        if(p!==null&&p!==0){ optsTotal+=p*qty; items.push({name:item.name,price:p*qty,qty}); }
+        else if(p===0||p===null){ items.push({name:item.name,price:0,qty:1,incl:true}); }
+      }
+    });
+  });
+
+  const qi=$('quoteItems'), qt=$('quoteTotals');
+  if(!base && items.length===0){
+    qi.innerHTML='<div class="empty-state"><div class="empty-icon">⛵</div><div class="empty-text">Select a model &amp; options<br>to build your quote</div></div>';
+    qt.style.display='none'; return;
+  }
+
+  let html=`<div class="q-sec-label">Base</div><div class="q-item base"><div class="q-item-name">${model} — Base Boat &amp; Trailer</div><div class="q-item-price">${fmtFull(base)}</div></div>`;
+  html+=`<div class="q-item fixed"><div class="q-item-name">Shipping &amp; Pre-Delivery Inspection</div><div class="q-item-price">+${fmt(DELIVERY_CHARGE)}</div></div>`;
+  if(items.length){
+    html+='<div class="q-sec-label">Options</div>';
+    items.forEach(it=>{ const neg=it.price<0; const ql=it.qty>1?` ×${it.qty}`:''; html+=`<div class="q-item"><div class="q-item-name">${it.name}${ql}</div><div class="q-item-price${neg?' neg':''}">${it.incl?'Incl':(neg?'−':'+')+fmt(Math.abs(it.price))}</div></div>`; });
+  }
+  qi.innerHTML=html; qt.style.display='block';
+  $('baseTotal').textContent=fmtFull(base);
+  $('optionsTotal').textContent=optsTotal===0?'—':(optsTotal>0?'+':'−')+fmt(Math.abs(optsTotal));
+  $('deliveryTotal').textContent=`+${fmt(DELIVERY_CHARGE)}`;
+  if(discountAmt>0){ $('discRow').classList.remove('hidden'); $('discTotal').textContent=`−${fmt(discountAmt)}`; }
+  else { $('discRow').classList.add('hidden'); }
+  const grand=base+optsTotal+DELIVERY_CHARGE-discountAmt;
+  $('grandTotal').textContent=fmtFull(grand);
+  $('grandRow').className=`tot-row grand ${brand()}`;
+  $('printBtn').className=`action-btn btn-print${series==='axis'?' axis-brand':series==='response'?' response-brand':''}`;
+}
+
+function renderAll() {
+  document.querySelectorAll('.series-tab').forEach(t=>t.classList.remove('active'));
+  const tabs=document.querySelectorAll('.series-tab');
+  const mi={wakesetter:0,axis:1,response:2};
+  if(mi[series]!==undefined) tabs[mi[series]].classList.add('active');
+  renderCustomerBar();
+  renderModelSelector();
+  renderOptions();
+  renderQuote();
+  updateDiscBtn();
+}
+
+// ════════════════════════════════════════════════════════════
+// SAVE QUOTE → SMARTSHEET
+// ════════════════════════════════════════════════════════════
+async function saveQuote() {
+  if (!customer.name || !customer.mobile) {
+    showToast('Please add customer details first', 'error');
+    openEditCustomerModal();
+    return;
+  }
+
+  const s = data[series];
+  const model = s.models[modelIdx];
+  const modelName = model;
+  const base = s.base.msrp[modelIdx];
+  let optsTotal=0; const items=[];
+  s.categories.forEach((cat,ci)=>{ cat.items.forEach((item,ii)=>{ const key=`${ci}-${ii}`; const qty=sel.get(key)||0; if(qty>0){ const isStdMdl=item.stdModels&&item.stdModels.includes(modelName); const p=(item.stdPrice&&isStdMdl)?0:item.msrp[modelIdx]; if(p!==null){ optsTotal+=p*qty; items.push({name:item.name,price:p*qty,qty}); } } }); });
+  const grand=base+optsTotal+DELIVERY_CHARGE-discountAmt;
+
+  const quote = {
+    id: currentQuoteRowId || Date.now(),
+    date: new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}),
+    series, model, base, optsTotal,
+    delivery: DELIVERY_CHARGE, discount: discountAmt||0, grand, items,
+    customer: { ...customer },
+    snap: JSON.stringify([...sel]),
+  };
+
+  if (!isSsConfigured()) {
+    showToast('Smartsheet not configured — quote not saved', 'error');
+    return;
+  }
+
+  const btn = $('saveBtn');
+  btn.disabled = true;
+  $('saveStatus').textContent = 'saving…';
+
+  try {
+    const res = await fetch(FUNCTION_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'saveQuote',
+        apiKey, sheetId, columnMap,
+        quote,
+        rowId: currentQuoteRowId || null,
+        appUrl: siteUrl || window.location.origin,
+      })
+    });
+    const data2 = await res.json();
+    if (!res.ok) throw new Error(data2.error || 'Save failed');
+
+    currentQuoteRowId = data2.rowId || currentQuoteRowId;
+    $('saveStatus').textContent = '✓ saved';
+    showToast('Quote saved to Smartsheet', 'success');
+    setTimeout(()=>{ $('saveStatus').textContent=''; },3000);
+  } catch(err) {
+    $('saveStatus').textContent = '✗ error';
+    showToast(`Save error: ${err.message}`, 'error', 5000);
+    setTimeout(()=>{ $('saveStatus').textContent=''; },4000);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// ACTIONS
+// ════════════════════════════════════════════════════════════
+function setSeries(s) {
+  series=s; modelIdx=0; sel.clear(); collapsed.clear();
+  autoSelectStd();
+  document.body.className = s==='axis'?'theme-axis':s==='response'?'theme-response':'';
+  renderAll();
+}
+
+function clearAll() {
+  sel.clear(); autoSelectStd();
+  renderAll();
+}
+
+function printQuote() {
+  const brandLabel = series==='axis'?'Axis Wake Boats':'Malibu Boats';
+  $('printBrand').textContent=`${brandLabel} — MY26 Quote`;
+  $('printDate').textContent=`Prepared: ${new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'})} · MSRP (inc. GST)`;
+  const parts=[customer.name,customer.mobile,customer.email,customer.postcode?'PC: '+customer.postcode:''].filter(Boolean);
+  $('printCust').textContent=parts.length?'Customer: '+parts.join(' · '):'';
+  window.print();
+}
+
+// ════════════════════════════════════════════════════════════
+// INIT — all DOM interactions go here, after full script parse
+// ════════════════════════════════════════════════════════════
+(function init() {
+  // Brand triple-tap (opens settings)
+  document.getElementById('brandWrap').addEventListener('click', brandTap);
+
+  // Edition badge triple-tap (opens $$ adjustment modal)
+  const edgeBadgeEl = document.getElementById('editionBadge');
+  if (edgeBadgeEl) edgeBadgeEl.addEventListener('click', edgeBadgeTap);
+
+  // Password field focus
+  document.getElementById('pwInput').focus();
+
+  // Discount modal — close on overlay click
+  const discOverlay = document.getElementById('discModalOverlay');
+  if (discOverlay) {
+    discOverlay.addEventListener('click', function(e) {
+      if (e.target === this) closeDiscountModal();
+    });
+  }
+
+  // Settings panel — close on outside click
+  document.addEventListener('click', function(e) {
+    const sp = document.getElementById('settingsPanel');
+    if (sp && sp.classList.contains('open') &&
+        !sp.contains(e.target) &&
+        !document.getElementById('brandWrap').contains(e.target)) {
+      sp.classList.remove('open');
+    }
+  });
+})();
+</script>
+</body>
+</html>
