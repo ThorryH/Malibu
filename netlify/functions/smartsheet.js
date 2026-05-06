@@ -96,6 +96,15 @@ exports.handler = async (event) => {
           const c = row.cells.find(c2 => String(c2.columnId) === String(columnMap[k] || ''));
           return c ? c.value : null;
         };
+        // Clean quoteJson — Smartsheet sometimes double-encodes string cells
+        let rawJson = cell('QUOTE_JSON');
+        if (typeof rawJson === 'string') {
+          rawJson = rawJson.trim();
+          // Strip surrounding quotes if double-stringified
+          if (rawJson.startsWith('"') && rawJson.endsWith('"')) {
+            try { rawJson = JSON.parse(rawJson); } catch(e) {}
+          }
+        }
         return {
           rowId:      row.id,
           date:       cell('DATE'),
@@ -106,7 +115,7 @@ exports.handler = async (event) => {
           mobile:     cell('MOBILE'),
           postcode:   cell('POSTCODE'),
           grandTotal: cell('GRAND_TOTAL'),
-          quoteJson:  cell('QUOTE_JSON'),
+          quoteJson:  rawJson,
         };
       });
 
