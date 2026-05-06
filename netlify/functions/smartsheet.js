@@ -127,7 +127,7 @@ exports.handler = async (event) => {
 
   // ─── SAVE QUOTE ───────────────────────────────────────────
   if (action === 'saveQuote') {
-    const { quote, columnMap, rowId, appUrl } = body;
+    const { quote, columnMap, rowId, appUrl, items } = body;
     if (!quote || !columnMap) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing quote or columnMap' }) };
     }
@@ -135,7 +135,7 @@ exports.handler = async (event) => {
     try {
       const quoteB64  = Buffer.from(JSON.stringify(quote)).toString('base64');
       const quoteLink = appUrl ? `${appUrl}/?q=${encodeURIComponent(quoteB64)}` : '';
-      const optsList  = (quote.items || []).map(it => `${it.name}${it.qty > 1 ? ' ×' + it.qty : ''}`).join(', ');
+      const optsList  = (items || quote.items || []).map(it => `${it.name}${it.qty > 1 ? ' ×' + it.qty : ''}`).join(', ');
 
       const vals = {
         DATE:          quote.date,
