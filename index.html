@@ -413,20 +413,36 @@
   /* ═══════════════════════════════════════════════════════════
      DEALER MODE
   ═══════════════════════════════════════════════════════════ */
-  .dealer-badge { display:none; position:fixed; top:0; left:50%; transform:translateX(-50%); background:linear-gradient(90deg,#e85d20,#c23a00); color:white; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:3px 18px; border-radius:0 0 6px 6px; z-index:500; }
-  .dealer-badge.show { display:block; }
-  .q-item-margin { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; color:#2ec87a; white-space:nowrap; text-align:right; margin-left:4px; }
-  .q-item-margin.low { color:#e8b44a; }
-  .q-item-margin.neg { color:#ff6b6b; }
-  .q-item-dealer { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; color:#aaa; white-space:nowrap; }
-  .q-item.dealer-view { flex-wrap:wrap; }
-  .q-item-prices { display:flex; flex-direction:column; align-items:flex-end; gap:1px; }
   .tot-row.margin-row { margin-top:0; margin-bottom:6px; }
   .tot-row.margin-row .tot-label { font-size:10px; color:var(--gray-dark); }
   .tot-row.margin-row .tot-val { font-size:14px; color:#2ec87a; }
   .tot-row.margin-row .tot-val.low { color:#e8b44a; }
   .tot-row.margin-row .tot-val.neg { color:#ff6b6b; }
   .margin-sub { font-family:'Barlow Condensed',sans-serif; font-size:11px; color:var(--gray-dark); margin-left:6px; }
+  /* Dealer toggle switch */
+  .dealer-toggle-row { display:none; align-items:center; justify-content:space-between; padding:8px 14px 2px; gap:8px; }
+  .dealer-toggle-row.visible { display:flex; }
+  .dealer-toggle-label { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#e85d20; }
+  .toggle-switch { position:relative; width:40px; height:22px; flex-shrink:0; }
+  .toggle-switch input { opacity:0; width:0; height:0; }
+  .toggle-slider { position:absolute; inset:0; background:var(--t-card); border:1px solid var(--t-border); border-radius:22px; cursor:pointer; transition:0.2s; }
+  .toggle-slider:before { content:''; position:absolute; width:16px; height:16px; left:2px; top:2px; background:var(--gray-dark); border-radius:50%; transition:0.2s; }
+  input:checked + .toggle-slider { background:#c23a00; border-color:#e85d20; }
+  input:checked + .toggle-slider:before { transform:translateX(18px); background:white; }
+  /* Dealer PIN modal */
+  .dealer-pin-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:400; align-items:center; justify-content:center; }
+  .dealer-pin-overlay.open { display:flex; }
+  .dealer-pin-box { background:var(--t-surface); border:1px solid #e85d20; border-radius:8px; padding:28px 28px 22px; width:300px; display:flex; flex-direction:column; gap:14px; }
+  .dealer-pin-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:18px; letter-spacing:2px; text-transform:uppercase; color:#e85d20; }
+  .dealer-pin-sub { font-size:12px; color:var(--gray-dark); margin-top:-8px; }
+  .dealer-pin-input { background:var(--t-card); border:1px solid var(--t-border); color:var(--white); font-family:'Barlow',sans-serif; font-size:18px; padding:10px 12px; border-radius:4px; outline:none; width:100%; letter-spacing:4px; text-align:center; transition:border 0.2s; }
+  .dealer-pin-input:focus { border-color:#e85d20; }
+  .dealer-pin-err { font-size:11px; color:#ff6b6b; display:none; text-align:center; margin-top:-6px; }
+  .dealer-pin-err.show { display:block; }
+  .dealer-pin-actions { display:flex; gap:8px; margin-top:4px; }
+  .dealer-pin-btn { flex:1; padding:10px; border:none; border-radius:3px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:13px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+  .dealer-pin-cancel { background:var(--t-card); color:var(--gray); border:1px solid var(--t-border); }
+  .dealer-pin-confirm { background:#c23a00; color:white; }
 
      /* ═══════════════════════════════════════════════════════════
      TOAST NOTIFICATION
@@ -617,9 +633,9 @@
           <div class="tot-val" id="grandTotal">—</div>
         </div>
         <!-- DEALER MODE ROWS — hidden by default -->
-        <div class="tot-row" id="dealerCostRow" style="display:none">
-          <div class="tot-label" style="color:var(--gray-dark);font-size:10px">Dealer Cost (ex. GST)</div>
-          <div class="tot-val" id="dealerCostVal" style="font-size:13px;color:var(--gray)">—</div>
+        <div class="tot-row" id="dealerPriceRow" style="display:none">
+          <div class="tot-label" style="font-size:10px;color:#e85d20">Dealer Price (inc. GST)</div>
+          <div class="tot-val" id="dealerPriceVal" style="font-size:14px;color:#e85d20">—</div>
         </div>
         <div class="tot-row margin-row" id="marginSummaryRow" style="display:none">
           <div class="tot-label">Gross Margin</div>
@@ -628,6 +644,14 @@
             <div class="margin-sub" id="marginDollar"></div>
           </div>
         </div>
+      </div>
+      <!-- DEALER TOGGLE ROW — shown only when dealer unlocked -->
+      <div class="dealer-toggle-row" id="dealerToggleRow">
+        <span class="dealer-toggle-label">🔒 Dealer View</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="dealerToggleChk" onchange="onDealerToggleChange(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
       </div>
       <div class="quote-actions">
         <button class="action-btn btn-clear" onclick="clearAll()">Clear</button>
@@ -645,6 +669,22 @@
 <div id="savedView" style="display:none"></div>
 
 </div><!-- /appWrap -->
+<!-- DEALER PIN MODAL -->
+<div class="dealer-pin-overlay" id="dealerPinOverlay">
+  <div class="dealer-pin-box">
+    <div class="dealer-pin-title">🔒 Dealer Access</div>
+    <div class="dealer-pin-sub">Enter dealer PIN to unlock pricing view</div>
+    <input class="dealer-pin-input" id="dealerPinInput" type="password" maxlength="20"
+      placeholder="••••••" autocomplete="off"
+      onkeydown="if(event.key==='Enter')confirmDealerPin()">
+    <div class="dealer-pin-err" id="dealerPinErr">Incorrect PIN</div>
+    <div class="dealer-pin-actions">
+      <button class="dealer-pin-btn dealer-pin-cancel" onclick="cancelDealerPin()">Cancel</button>
+      <button class="dealer-pin-btn dealer-pin-confirm" onclick="confirmDealerPin()">Unlock</button>
+    </div>
+  </div>
+</div>
+
 <!-- ════════════════════════════════════════════════════════════
      $$ ADJUSTMENT MODAL (hidden — triple-tap MY26 Ed.2 badge)
 ════════════════════════════════════════════════════════════ -->
@@ -727,8 +767,6 @@
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
-<!-- DEALER MODE BADGE -->
-<div class="dealer-badge" id="dealerBadge">⚠ Dealer View — Confidential</div>
 
 <script>
 // ════════════════════════════════════════════════════════════
@@ -800,15 +838,10 @@ function isSsConfigured() {
 // ════════════════════════════════════════════════════════════
 function checkPw() {
   const v = $('pwInput').value;
-  if (v === CORRECT_PW || v === DEALER_PW) {
-    if (v === DEALER_PW) {
-      dealerMode = true;
-      $('dealerBadge').classList.add('show');
-    }
+  if (v === CORRECT_PW) {
     $('pwScreen').style.display = 'none';
     $('appWrap').style.display = '';
     checkSsConfig();
-    // Check if there's a ?q= param (loaded from a quote link)
     const urlQ = new URLSearchParams(window.location.search).get('q');
     if (urlQ) {
       try {
@@ -825,10 +858,45 @@ function checkPw() {
   }
 }
 
-function toggleDealerMode() {
-  dealerMode = !dealerMode;
-  $('dealerBadge').classList.toggle('show', dealerMode);
-  showToast(dealerMode ? '🔒 Dealer Mode ON — Confidential' : 'Dealer Mode OFF', dealerMode ? 'success' : 'info');
+// ── DEALER PIN MODAL ──────────────────────────────────────────────────────────
+let dealerUnlocked = false; // set to true once PIN verified this session
+
+function openDealerPinModal() {
+  $('dealerPinInput').value = '';
+  $('dealerPinErr').classList.remove('show');
+  $('dealerPinOverlay').classList.add('open');
+  setTimeout(()=>$('dealerPinInput').focus(), 80);
+}
+
+function cancelDealerPin() {
+  $('dealerPinOverlay').classList.remove('open');
+  // Revert toggle if user cancels
+  $('dealerToggleChk').checked = false;
+}
+
+function confirmDealerPin() {
+  const v = $('dealerPinInput').value;
+  if (v === DEALER_PW) {
+    dealerUnlocked = true;
+    $('dealerPinOverlay').classList.remove('open');
+    dealerMode = true;
+    $('dealerToggleChk').checked = true;
+    renderQuote();
+  } else {
+    $('dealerPinErr').classList.add('show');
+    $('dealerPinInput').value = '';
+    $('dealerPinInput').focus();
+  }
+}
+
+function onDealerToggleChange(checked) {
+  if (checked && !dealerUnlocked) {
+    // Need to verify PIN first
+    openDealerPinModal();
+    return;
+  }
+  dealerMode = checked;
+  if (!checked) dealerUnlocked = false; // lock again when toggled off
   renderQuote();
 }
 
@@ -1055,12 +1123,9 @@ function edgeBadgeTap() {
   edgeTapCount++;
   clearTimeout(edgeTapTimer);
   edgeTapTimer = setTimeout(() => { edgeTapCount = 0; }, 600);
-  if (edgeTapCount === 3) {
+  if (edgeTapCount >= 3) {
     edgeTapCount = 0;
     openDiscountModal();
-  } else if (edgeTapCount === 5) {
-    edgeTapCount = 0;
-    toggleDealerMode();
   }
 }
 function closeSettings() { $('settingsPanel').classList.remove('open'); }
@@ -1456,6 +1521,9 @@ const dealerData = {
         { dealer:[null,null,7568,7568,7568] },
         { dealer:[null,null,null,null,null] },  // Plug & Play Bags — not in dealer sheet
       ]},
+      { name:'Accessories', items: [
+        { dealer:[1000,1000,1000,1000,1000] },
+      ]},
     ]
   },
   axis: {
@@ -1525,6 +1593,9 @@ const dealerData = {
         { dealer:[0,0,0] },
         { dealer:[1861,1861,1861] },
       ]},
+      { name:'Accessories', items: [
+        { dealer:[1000,1000,1000] },
+      ]},
     ]
   },
   response: {
@@ -1589,6 +1660,9 @@ const dealerData = {
       { name:'Wake Technology', items: [
         { dealer:[540] },
         { dealer:[2873] },
+      ]},
+      { name:'Accessories', items: [
+        { dealer:[1000] },
       ]},
     ]
   },
@@ -1770,6 +1844,9 @@ const rawData = {
         { name: 'Wake Tech: Stern Turn (inc. Upgraded 250A Alternator)', msrp:[null,null,9794,9794,9794] },
         { name: 'Wake Tech: Plug & Play Bags', msrp:[999,999,999,999,999] },
       ]},
+      { name: 'Accessories', items: [
+        { name: 'Boat Cover', msrp:[1750,1750,1750,1750,1750] },
+      ]},
     ]
   },
   axis: {
@@ -1839,6 +1916,9 @@ const rawData = {
         { name: 'Wake Tech: Plug & Play Ready Rear & Bow Ballast System w/Auto Vent', msrp:[2729,2729,2729] },
         { name: 'Wake Tech: Plug & Play Bags', msrp:[1499,1499,1499] },
       ]},
+      { name: 'Accessories', items: [
+        { name: 'Boat Cover', msrp:[1750,1750,1750] },
+      ]},
     ]
   },
   response: {
@@ -1904,6 +1984,9 @@ const rawData = {
       { name: 'Wake Technology', items: [
         { name: 'Wake Tech: Wedge Plate Only', msrp:[699] },
         { name: 'Wake Tech: Auto-Set Manual Wedge', msrp:[3718] },
+      ]},
+      { name: 'Accessories', items: [
+        { name: 'Boat Cover', msrp:[1750] },
       ]},
     ]
   }
@@ -2122,18 +2205,6 @@ function marginClass(m) {
   return '';
 }
 
-function fmtMargin(msrpIncGst, dealerExGst, qty) {
-  if (msrpIncGst == null || dealerExGst == null) return '';
-  qty = qty || 1;
-  const msrpEx = msrpIncGst / (1 + GST_RATE);
-  const grossDollar = (msrpEx - dealerExGst) * qty;
-  const pct = (msrpEx - dealerExGst) / msrpEx;
-  const mc = marginClass(pct);
-  const pctStr = (pct * 100).toFixed(1) + '%';
-  const dolStr = (grossDollar >= 0 ? '+' : '−') + '$' + Math.abs(Math.round(grossDollar)).toLocaleString('en-AU');
-  return `<span class="q-item-margin ${mc}">${pctStr} &nbsp;${dolStr}</span>`;
-}
-
 function renderQuote() {
   const s = data[series];
   const model = s.models[modelIdx];
@@ -2155,7 +2226,7 @@ function renderQuote() {
         const p=(item.stdPrice&&isStdMdl)?0:item.msrp[modelIdx];
         const dc=getDealerCost(series,ci,ii,modelIdx);
         if(p!==null&&p!==0){ optsTotal+=p*qty; if(dc!=null)dealerOptsTotal+=dc*qty; items.push({name:item.name,price:p*qty,qty,dealerUnit:dc,msrpUnit:p}); }
-        else if(p===0||p===null){ items.push({name:item.name,price:0,qty:1,incl:true,dealerUnit:dc,msrpUnit:p}); }
+        else if(p===0||p===null){ items.push({name:item.name,price:0,qty:1,incl:true}); }
       }
     });
   });
@@ -2166,21 +2237,13 @@ function renderQuote() {
     qt.style.display='none'; return;
   }
 
-  const baseMarginHtml = dealerMode && dealerBase!=null
-    ? `<div class="q-item-prices"><div class="q-item-price">${fmtFull(base)}</div><div class="q-item-dealer">Cost: ${fmtFull(dealerBase)}</div>${fmtMargin(base,dealerBase,1)}</div>`
-    : `<div class="q-item-price">${fmtFull(base)}</div>`;
-
-  let html=`<div class="q-sec-label">Base</div><div class="q-item base${dealerMode?' dealer-view':''}"><div class="q-item-name">${model} — Base Boat &amp; Trailer</div>${baseMarginHtml}</div>`;
+  let html=`<div class="q-sec-label">Base</div><div class="q-item base"><div class="q-item-name">${model} — Base Boat &amp; Trailer</div><div class="q-item-price">${fmtFull(base)}</div></div>`;
   html+=`<div class="q-item fixed"><div class="q-item-name">Shipping &amp; Pre-Delivery Inspection</div><div class="q-item-price">+${fmt(DELIVERY_CHARGE)}</div></div>`;
   if(items.length){
     html+='<div class="q-sec-label">Options</div>';
     items.forEach(it=>{
       const neg=it.price<0; const ql=it.qty>1?` ×${it.qty}`:'';
-      const priceStr=it.incl?'Incl':(neg?'−':'+')+fmt(Math.abs(it.price));
-      const dealerCostStr=(dealerMode&&it.dealerUnit!=null&&!it.incl)?`<div class="q-item-dealer">Cost: ${(it.price<0?'−':'')+'$'+Math.abs(it.dealerUnit*(it.qty||1)).toLocaleString('en-AU')}</div>`:'';
-      const marginHtml=(dealerMode&&it.dealerUnit!=null&&!it.incl&&it.msrpUnit!=null)?fmtMargin(it.msrpUnit,it.dealerUnit,it.qty):'';
-      const priceBlock=dealerMode?`<div class="q-item-prices"><div class="q-item-price${neg?' neg':''}">${priceStr}</div>${dealerCostStr}${marginHtml}</div>`:`<div class="q-item-price${neg?' neg':''}">${priceStr}</div>`;
-      html+=`<div class="q-item${dealerMode?' dealer-view':''}"><div class="q-item-name">${it.name}${ql}</div>${priceBlock}</div>`;
+      html+=`<div class="q-item"><div class="q-item-name">${it.name}${ql}</div><div class="q-item-price${neg?' neg':''}">${it.incl?'Incl':(neg?'−':'+')+fmt(Math.abs(it.price))}</div></div>`;
     });
   }
   qi.innerHTML=html; qt.style.display='block';
@@ -2194,27 +2257,31 @@ function renderQuote() {
   $('grandRow').className=`tot-row grand ${brand()}`;
   $('printBtn').className=`action-btn btn-print${series==='axis'?' axis-brand':series==='response'?' response-brand':''}`;
 
-  // Dealer margin summary
-  const marginRowEl=$('marginSummaryRow');
+  // Show dealer toggle row whenever builder view is active
+  $('dealerToggleRow').className = 'dealer-toggle-row visible';
+
+  // Dealer totals
+  const dpRow=$('dealerPriceRow'), msRow=$('marginSummaryRow');
   if(dealerMode && dealerBase!=null){
-    const dealerTotal=dealerBase+dealerOptsTotal+DELIVERY_CHARGE;
-    const msrpExGst=grand/(1+GST_RATE);
-    const grossDollar=msrpExGst-dealerTotal;
-    const grossPct=grossDollar/msrpExGst;
-    const mc=marginClass(grossPct);
-    marginRowEl.style.display='block';
+    // Dealer price inc GST = dealer_cost_exgst * 1.1
+    const dealerCostExGst = dealerBase + dealerOptsTotal + DELIVERY_CHARGE;
+    const dealerPriceIncGst = dealerCostExGst * (1 + GST_RATE);
+    const msrpExGst = grand / (1 + GST_RATE);
+    const grossDollar = msrpExGst - dealerCostExGst;
+    const grossPct = grossDollar / msrpExGst;
+    const mc = marginClass(grossPct);
+    dpRow.style.display='block';
+    $('dealerPriceVal').textContent=fmtFull(Math.round(dealerPriceIncGst));
+    msRow.style.display='block';
     $('marginPct').textContent=(grossPct*100).toFixed(1)+'%';
     $('marginPct').className=`tot-val ${mc}`;
-    $('marginDollar').textContent=(grossDollar>=0?'+':'−')+'$'+Math.abs(Math.round(grossDollar)).toLocaleString('en-AU');
+    $('marginDollar').textContent=(grossDollar>=0?'+':'−')+('$')+Math.abs(Math.round(grossDollar)).toLocaleString('en-AU');
     $('marginDollar').className=`margin-sub ${mc}`;
-    $('dealerCostRow').style.display='block';
-    $('dealerCostVal').textContent=fmtFull(dealerTotal);
   } else {
-    marginRowEl.style.display='none';
-    $('dealerCostRow').style.display='none';
+    dpRow.style.display='none';
+    msRow.style.display='none';
   }
 }
-
 function renderAll() {
   document.querySelectorAll('.series-tab').forEach(t=>t.classList.remove('active'));
   const tabs=document.querySelectorAll('.series-tab');
