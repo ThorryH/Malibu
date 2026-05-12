@@ -411,6 +411,24 @@
   ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-thumb { background:var(--t-border); border-radius:2px; }
 
   /* ═══════════════════════════════════════════════════════════
+     DEALER MODE
+  ═══════════════════════════════════════════════════════════ */
+  .dealer-badge { display:none; position:fixed; top:0; left:50%; transform:translateX(-50%); background:linear-gradient(90deg,#e85d20,#c23a00); color:white; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:3px 18px; border-radius:0 0 6px 6px; z-index:500; }
+  .dealer-badge.show { display:block; }
+  .q-item-margin { font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; color:#2ec87a; white-space:nowrap; text-align:right; margin-left:4px; }
+  .q-item-margin.low { color:#e8b44a; }
+  .q-item-margin.neg { color:#ff6b6b; }
+  .q-item-dealer { font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; color:#aaa; white-space:nowrap; }
+  .q-item.dealer-view { flex-wrap:wrap; }
+  .q-item-prices { display:flex; flex-direction:column; align-items:flex-end; gap:1px; }
+  .tot-row.margin-row { margin-top:0; margin-bottom:6px; }
+  .tot-row.margin-row .tot-label { font-size:10px; color:var(--gray-dark); }
+  .tot-row.margin-row .tot-val { font-size:14px; color:#2ec87a; }
+  .tot-row.margin-row .tot-val.low { color:#e8b44a; }
+  .tot-row.margin-row .tot-val.neg { color:#ff6b6b; }
+  .margin-sub { font-family:'Barlow Condensed',sans-serif; font-size:11px; color:var(--gray-dark); margin-left:6px; }
+
+     /* ═══════════════════════════════════════════════════════════
      TOAST NOTIFICATION
   ═══════════════════════════════════════════════════════════ */
     /* ═══════════════════════════════════════════════════════════
@@ -598,6 +616,18 @@
           <div class="tot-label">Total MSRP (inc. GST)</div>
           <div class="tot-val" id="grandTotal">—</div>
         </div>
+        <!-- DEALER MODE ROWS — hidden by default -->
+        <div class="tot-row" id="dealerCostRow" style="display:none">
+          <div class="tot-label" style="color:var(--gray-dark);font-size:10px">Dealer Cost (ex. GST)</div>
+          <div class="tot-val" id="dealerCostVal" style="font-size:13px;color:var(--gray)">—</div>
+        </div>
+        <div class="tot-row margin-row" id="marginSummaryRow" style="display:none">
+          <div class="tot-label">Gross Margin</div>
+          <div style="display:flex;align-items:baseline;gap:0">
+            <div class="tot-val" id="marginPct">—</div>
+            <div class="margin-sub" id="marginDollar"></div>
+          </div>
+        </div>
       </div>
       <div class="quote-actions">
         <button class="action-btn btn-clear" onclick="clearAll()">Clear</button>
@@ -697,14 +727,19 @@
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+<!-- DEALER MODE BADGE -->
+<div class="dealer-badge" id="dealerBadge">⚠ Dealer View — Confidential</div>
 
 <script>
 // ════════════════════════════════════════════════════════════
 // CONFIG
 // ════════════════════════════════════════════════════════════
 const CORRECT_PW    = 'wakesetter';
+const DEALER_PW     = 'dealermode';   // hidden dealer unlock password
 const DELIVERY_CHARGE = 2500;
+const DELIVERY_DEALER = 2500;         // delivery cost is same; margin tracked separately
 const FUNCTION_URL  = '/.netlify/functions/smartsheet';
+const GST_RATE      = 0.10;           // Dealer prices are ex-GST; MSRP is inc-GST
 
 // Column keys we need mapped
 const COL_KEYS = [
@@ -721,6 +756,7 @@ let modelIdx = 0;
 let sel      = new Map();
 let collapsed = new Set();
 let discountAmt = 0;
+let dealerMode  = false;              // hidden dealer view toggle
 let brandTapCount = 0, brandTapTimer = null;
 let edgeTapCount = 0, edgeTapTimer = null;
 let currentQuoteRowId = null; // Smartsheet row ID of the currently loaded quote
@@ -764,7 +800,11 @@ function isSsConfigured() {
 // ════════════════════════════════════════════════════════════
 function checkPw() {
   const v = $('pwInput').value;
-  if (v === CORRECT_PW) {
+  if (v === CORRECT_PW || v === DEALER_PW) {
+    if (v === DEALER_PW) {
+      dealerMode = true;
+      $('dealerBadge').classList.add('show');
+    }
     $('pwScreen').style.display = 'none';
     $('appWrap').style.display = '';
     checkSsConfig();
@@ -783,6 +823,13 @@ function checkPw() {
     $('pwInput').value = '';
     $('pwInput').focus();
   }
+}
+
+function toggleDealerMode() {
+  dealerMode = !dealerMode;
+  $('dealerBadge').classList.toggle('show', dealerMode);
+  showToast(dealerMode ? '🔒 Dealer Mode ON — Confidential' : 'Dealer Mode OFF', dealerMode ? 'success' : 'info');
+  renderQuote();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -987,7 +1034,7 @@ function brandTap() {
   brandTapCount++;
   clearTimeout(brandTapTimer);
   brandTapTimer = setTimeout(()=>{ brandTapCount=0; },600);
-  if (brandTapCount >= 3) {
+  if (brandTapCount === 3) {
     brandTapCount = 0;
     openSettings();
   }
@@ -1008,9 +1055,12 @@ function edgeBadgeTap() {
   edgeTapCount++;
   clearTimeout(edgeTapTimer);
   edgeTapTimer = setTimeout(() => { edgeTapCount = 0; }, 600);
-  if (edgeTapCount >= 3) {
+  if (edgeTapCount === 3) {
     edgeTapCount = 0;
     openDiscountModal();
+  } else if (edgeTapCount === 5) {
+    edgeTapCount = 0;
+    toggleDealerMode();
   }
 }
 function closeSettings() { $('settingsPanel').classList.remove('open'); }
@@ -1295,6 +1345,324 @@ function makeAxisTrailerCats(n) {
 // ════════════════════════════════════════════════════════════
 // DATA
 // ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
+// DEALER COST DATA (ex-GST)  — MY26 Edition 2
+// Margin = (MSRP/1.1 − DealerCost) / (MSRP/1.1)
+// ════════════════════════════════════════════════════════════
+const dealerData = {
+  wakesetter: {
+    base: [157704,170735,181734,201377,206152],
+    categories: [
+      { name:'Engine / Exhaust', items: [
+        { dealer:[0,0,0,-7598,-7598] },
+        { dealer:[7598,7598,7598,0,0] },
+        { dealer:[null,null,25809,21211,21211] },
+        { dealer:[476,null,null,null,null] },
+        { dealer:[723,0,0,0,0] },
+      ]},
+      { name:'Propeller Upgrade', items: [
+        { dealer:[344,344,344,344,344] },
+      ]},
+      { name:'Gel Coat', items: [
+        { dealer:[2021,2021,2021,2021,2021] },
+        { dealer:[1872,1872,1872,1872,1872] },
+        { dealer:[1427,1427,1427,1427,1427] },
+        { dealer:[2122,2122,2122,2122,2122] },
+        { dealer:[4245,4245,4245,4245,4245] },
+        { dealer:[577,577,577,577,577] },
+        { dealer:[265,265,265,265,265] },
+        { dealer:[382,382,382,382,382] },
+      ]},
+      { name:'Hardware', items: [
+        { dealer:[2396,2396,2396,2396,2396] },
+        { dealer:[762,762,762,762,762] },
+        { dealer:[486,486,486,486,486] },
+        { dealer:[1964,1964,1964,1964,1964] },
+        { dealer:[1037,1037,1037,1037,1037] },
+        { dealer:[1529,1529,1529,1529,1529] },
+        { dealer:[null,null,1725,1725,1725] },
+        { dealer:[739,739,739,739,739] },
+        { dealer:[923,null,923,923,923] },
+        { dealer:[399,399,399,399,399] },
+        { dealer:[1342,null,1342,1342,1342] },
+        { dealer:[862,862,862,862,862] },
+        { dealer:[3679,3679,3679,3679,3679] },
+        { dealer:[2176,null,null,null,null] },
+      ]},
+      { name:'Interior / Cockpit', items: [
+        { dealer:[917,917,917,917,917] },
+        { dealer:[null,null,1084,1084,1084] },
+        { dealer:[null,null,800,800,800] },
+        { dealer:[1081,1081,1081,1081,1081] },
+        { dealer:[434,434,434,434,434] },
+        { dealer:[1042,1042,1042,1042,1042] },
+        { dealer:[null,null,369,369,369] },
+        { dealer:[284,284,null,null,null] },
+        { dealer:[883,883,883,883,883] },
+        { dealer:[470,470,null,null,null] },
+        { dealer:[212,212,212,212,212] },
+        { dealer:[null,null,2808,2808,2808] },
+        { dealer:[479,479,479,479,479] },
+        { dealer:[null,null,2072,2072,2072] },
+        { dealer:[513,513,513,513,769.5] },
+        { dealer:[405,405,405,405,405] },
+        { dealer:[null,null,485,485,485] },
+        { dealer:[null,null,941,null,null] },
+        { dealer:[null,null,null,5247,5247] },
+        { dealer:[2585,2585,2585,2585,2585] },
+        { dealer:[null,null,null,2736,2736] },
+      ]},
+      { name:'Lighting', items: [
+        { dealer:[695,1079,1079,1079,1079] },
+        { dealer:[null,null,null,3007,3007] },
+        { dealer:[1222,1222,1222,1222,1222] },
+      ]},
+      { name:'Sound', items: [
+        { dealer:[2909,2909,2909,2909,2909] },
+        { dealer:[null,null,null,3128,3128] },
+        { dealer:[2390,2390,2390,2390,2390] },
+        { dealer:[1791,1791,1791,1791,1791] },
+        { dealer:[2071,2071,2071,2071,2071] },
+        { dealer:[2960,2960,2960,2960,2960] },
+        { dealer:[4351,4351,4351,4351,4351] },
+        { dealer:[585,585,585,585,585] },
+      ]},
+      { name:'Tower', items: [
+        { dealer:[0,null,null,null,null] },
+        { dealer:[1363,0,0,0,0] },
+        { dealer:[null,778,778,778,778] },
+        { dealer:[null,2220,2220,2220,2220] },
+        { dealer:[495,495,495,495,495] },
+        { dealer:[249,249,249,249,249] },
+        { dealer:[349,349,349,349,349] },
+        { dealer:[null,189,189,189,189] },
+        { dealer:[null,null,9432,9432,9432] },
+        { dealer:[1198,1198,1198,1198,1198] },
+        { dealer:[null,827,827,827,827] },
+        { dealer:[1751,1751,1751,1751,1751] },
+        { dealer:[799,799,799,799,799] },
+        { dealer:[2881,2881,2881,2881,2881] },
+        { dealer:[3619,3619,3619,3619,3619] },
+        { dealer:[3198,3198,3198,3198,3198] },
+        { dealer:[0,0,0,0,0] },
+        { dealer:[2667,2667,2667,2667,2667] },
+        { dealer:[2277,2277,2277,2277,2277] },
+        { dealer:[1864,1864,1864,1864,1864] },
+        { dealer:[374,374,374,374,374] },
+        { dealer:[null,null,1504,1504,1504] },
+      ]},
+      { name:'Wake & Surf Technology', items: [
+        { dealer:[1290,1290,1290,1290,1290] },
+        { dealer:[null,null,7568,7568,7568] },
+        { dealer:[null,null,null,null,null] },  // Plug & Play Bags — not in dealer sheet
+      ]},
+    ]
+  },
+  axis: {
+    base: [125521,137215,135654],
+    categories: [
+      { name:'Engine / Exhaust', items: [
+        { dealer:[0,0,0] },
+        { dealer:[7598,7598,7598] },
+      ]},
+      { name:'Underwater Gear', items: [
+        { dealer:[344,344,344] },
+        { dealer:[426,426,426] },
+      ]},
+      { name:'Gel Coat', items: [
+        { dealer:[2435,2435,2435] },
+        { dealer:[3951,3951,3951] },
+        { dealer:[6439,6439,6439] },
+      ]},
+      { name:'Hardware / Interior', items: [
+        { dealer:[2396,2396,2396] },
+        { dealer:[427,427,427] },
+        { dealer:[594,594,594] },
+        { dealer:[405,405,405] },
+        { dealer:[846,846,846] },
+        { dealer:[1217,1217,1217] },
+        { dealer:[1964,1964,1964] },
+        { dealer:[1529,1529,1529] },
+        { dealer:[1725,1725,1725] },
+        { dealer:[521,521,521] },
+        { dealer:[2709,2709,2709] },
+        { dealer:[513,513,513] },
+        { dealer:[716,716,716] },
+        { dealer:[null,1168,1168] },
+        { dealer:[970,970,970] },
+        { dealer:[null,595,595] },
+        { dealer:[220,220,220] },
+        { dealer:[377,377,377] },
+        { dealer:[1976,1976,1976] },
+        { dealer:[284,284,284] },
+        { dealer:[212,212,212] },
+        { dealer:[405,405,405] },
+      ]},
+      { name:'Lighting', items: [
+        { dealer:[1079,1079,1079] },
+        { dealer:[638,638,638] },
+        { dealer:[1007,1007,1007] },
+      ]},
+      { name:'Sound', items: [
+        { dealer:[3010,3010,3010] },
+        { dealer:[1681,1681,1681] },
+        { dealer:[1681,1681,1681] },
+        { dealer:[7629,7629,7629] },
+        { dealer:[2522,2522,2522] },
+        { dealer:[585,585,585] },
+      ]},
+      { name:'Tower', items: [
+        { dealer:[1251,1251,1251] },
+        { dealer:[1117,1117,1117] },
+        { dealer:[639,639,639] },
+        { dealer:[3470,3470,3470] },
+        { dealer:[2875,2875,2875] },
+        { dealer:[622,622,622] },
+      ]},
+      { name:'Wake & Surf Technology', items: [
+        { dealer:[-3240,-3240,-3240] },
+        { dealer:[0,0,0] },
+        { dealer:[0,0,0] },
+        { dealer:[1861,1861,1861] },
+      ]},
+    ]
+  },
+  response: {
+    base: [116356],
+    categories: [
+      { name:'Engine / Exhaust', items: [
+        { dealer:[0] },
+        { dealer:[7598] },
+      ]},
+      { name:'Propeller Upgrade', items: [
+        { dealer:[344] },
+      ]},
+      { name:'Gel Coat', items: [
+        { dealer:[2021] },
+        { dealer:[1872] },
+        { dealer:[2122] },
+        { dealer:[577] },
+        { dealer:[1427] },
+        { dealer:[265] },
+        { dealer:[382] },
+      ]},
+      { name:'Hardware', items: [
+        { dealer:[2396] },
+        { dealer:[455] },
+        { dealer:[1562] },
+        { dealer:[1342] },
+        { dealer:[773] },
+        { dealer:[1529] },
+      ]},
+      { name:'Interior / Cockpit', items: [
+        { dealer:[846] },
+        { dealer:[434] },
+        { dealer:[405] },
+        { dealer:[1216] },
+        { dealer:[1081] },
+        { dealer:[320] },
+        { dealer:[208] },
+        { dealer:[513] },
+        { dealer:[1739] },
+        { dealer:[1348] },
+        { dealer:[590] },
+        { dealer:[1042] },
+        { dealer:[2928] },
+        { dealer:[3698] },
+      ]},
+      { name:'Lighting', items: [
+        { dealer:[903] },
+        { dealer:[1222] },
+      ]},
+      { name:'Tower', items: [
+        { dealer:[6297] },
+        { dealer:[500] },
+        { dealer:[1806] },
+        { dealer:[726] },
+        { dealer:[726] },
+      ]},
+      { name:'Sound', items: [
+        { dealer:[2403] },
+        { dealer:[2344] },
+        { dealer:[585] },
+      ]},
+      { name:'Wake Technology', items: [
+        { dealer:[540] },
+        { dealer:[2873] },
+      ]},
+    ]
+  },
+  // Trailer dealer costs (shared across all series)
+  trailer: {
+    categories: [
+      { name:'Paint Options', items: [
+        { dealer:[-1788], msrp:[-2623] },
+        { dealer:[0], msrp:[0] },       // STD
+        { dealer:[742], msrp:[1089] },
+        { dealer:[617], msrp:[905] },
+        { dealer:[670], msrp:[983] },
+      ]},
+      { name:'Guard and Step Options', items: [
+        { dealer:[1749], msrp:[2566] },
+        { dealer:[214], msrp:[314] },
+      ]},
+      { name:'Brake & Axle Options', items: [
+        { dealer:[1258], msrp:[1846] },
+        { dealer:[458], msrp:[672] },
+        { dealer:[0], msrp:[0] },       // STD
+        { dealer:[587], msrp:[861] },
+      ]},
+      { name:'Decking Options', items: [
+        { dealer:[3585], msrp:[5258] },
+        { dealer:[1731], msrp:[2539] },
+        { dealer:[771], msrp:[1131] },
+        { dealer:[434], msrp:[637] },
+      ]},
+      { name:'Other Options', items: [
+        { dealer:[5308], msrp:[6870] },
+        { dealer:[2144], msrp:[3145] },
+        { dealer:[996], msrp:[1461] },
+        { dealer:[1003], msrp:[1472] },
+      ]},
+      { name:'Wheel Options', items: [
+        { dealer:[1492], msrp:[2189] },
+        { dealer:[383], msrp:[562] },
+        { dealer:[645], msrp:[946] },
+        { dealer:[1172], msrp:[1719] },
+        { dealer:[547], msrp:[803] },
+        { dealer:[691], msrp:[1014] },
+        { dealer:[910], msrp:[1335] },
+        { dealer:[3265], msrp:[4789] },
+        { dealer:[1492], msrp:[2189] },
+        { dealer:[319], msrp:[468] },
+      ]},
+    ]
+  }
+};
+
+// Helper: get dealer cost for a series/category/item/modelIdx
+function getDealerCost(seriesKey, catIdx, itemIdx, mIdx) {
+  const sd = dealerData[seriesKey];
+  if (!sd || !sd.categories[catIdx] || !sd.categories[catIdx].items[itemIdx]) return null;
+  const d = sd.categories[catIdx].items[itemIdx].dealer;
+  if (!d) return null;
+  const val = Array.isArray(d) ? d[mIdx] : d;
+  return (val === undefined) ? null : val;
+}
+
+function getDealerBase(seriesKey, mIdx) {
+  const sd = dealerData[seriesKey];
+  return sd ? sd.base[mIdx] : null;
+}
+
+// Margin calculation: (MSRP_exGST - dealer) / MSRP_exGST
+// MSRP in rawData is inc-GST, dealer is ex-GST
+function calcMargin(msrpIncGst, dealerExGst) {
+  if (msrpIncGst == null || dealerExGst == null || dealerExGst === 0) return null;
+  const msrpEx = msrpIncGst / (1 + GST_RATE);
+  return (msrpEx - dealerExGst) / msrpEx;
+}
+
 const rawData = {
   wakesetter: {
     models: ['20VTX','21LX','22LSV','23LSV','23MXZ'],
@@ -1747,6 +2115,25 @@ function chgQty(e,key,d) {
   renderAll();
 }
 
+function marginClass(m) {
+  if (m === null) return '';
+  if (m < 0) return 'neg';
+  if (m < 0.15) return 'low';
+  return '';
+}
+
+function fmtMargin(msrpIncGst, dealerExGst, qty) {
+  if (msrpIncGst == null || dealerExGst == null) return '';
+  qty = qty || 1;
+  const msrpEx = msrpIncGst / (1 + GST_RATE);
+  const grossDollar = (msrpEx - dealerExGst) * qty;
+  const pct = (msrpEx - dealerExGst) / msrpEx;
+  const mc = marginClass(pct);
+  const pctStr = (pct * 100).toFixed(1) + '%';
+  const dolStr = (grossDollar >= 0 ? '+' : '−') + '$' + Math.abs(Math.round(grossDollar)).toLocaleString('en-AU');
+  return `<span class="q-item-margin ${mc}">${pctStr} &nbsp;${dolStr}</span>`;
+}
+
 function renderQuote() {
   const s = data[series];
   const model = s.models[modelIdx];
@@ -1756,7 +2143,8 @@ function renderQuote() {
   $('quoteModelName').textContent = `${brandLabel} — ${model}`;
   $('brandName').textContent = series==='axis'?'Axis Wake Boats MY26 Pricing':'Malibu Boats MY26 Pricing';
 
-  let optsTotal=0;
+  const dealerBase = getDealerBase(series, modelIdx);
+  let optsTotal=0, dealerOptsTotal=0;
   const items=[];
   s.categories.forEach((cat,ci)=>{
     cat.items.forEach((item,ii)=>{
@@ -1765,8 +2153,9 @@ function renderQuote() {
       if(qty>0){
         const isStdMdl=item.stdModels&&item.stdModels.includes(modelName);
         const p=(item.stdPrice&&isStdMdl)?0:item.msrp[modelIdx];
-        if(p!==null&&p!==0){ optsTotal+=p*qty; items.push({name:item.name,price:p*qty,qty}); }
-        else if(p===0||p===null){ items.push({name:item.name,price:0,qty:1,incl:true}); }
+        const dc=getDealerCost(series,ci,ii,modelIdx);
+        if(p!==null&&p!==0){ optsTotal+=p*qty; if(dc!=null)dealerOptsTotal+=dc*qty; items.push({name:item.name,price:p*qty,qty,dealerUnit:dc,msrpUnit:p}); }
+        else if(p===0||p===null){ items.push({name:item.name,price:0,qty:1,incl:true,dealerUnit:dc,msrpUnit:p}); }
       }
     });
   });
@@ -1777,11 +2166,22 @@ function renderQuote() {
     qt.style.display='none'; return;
   }
 
-  let html=`<div class="q-sec-label">Base</div><div class="q-item base"><div class="q-item-name">${model} — Base Boat &amp; Trailer</div><div class="q-item-price">${fmtFull(base)}</div></div>`;
+  const baseMarginHtml = dealerMode && dealerBase!=null
+    ? `<div class="q-item-prices"><div class="q-item-price">${fmtFull(base)}</div><div class="q-item-dealer">Cost: ${fmtFull(dealerBase)}</div>${fmtMargin(base,dealerBase,1)}</div>`
+    : `<div class="q-item-price">${fmtFull(base)}</div>`;
+
+  let html=`<div class="q-sec-label">Base</div><div class="q-item base${dealerMode?' dealer-view':''}"><div class="q-item-name">${model} — Base Boat &amp; Trailer</div>${baseMarginHtml}</div>`;
   html+=`<div class="q-item fixed"><div class="q-item-name">Shipping &amp; Pre-Delivery Inspection</div><div class="q-item-price">+${fmt(DELIVERY_CHARGE)}</div></div>`;
   if(items.length){
     html+='<div class="q-sec-label">Options</div>';
-    items.forEach(it=>{ const neg=it.price<0; const ql=it.qty>1?` ×${it.qty}`:''; html+=`<div class="q-item"><div class="q-item-name">${it.name}${ql}</div><div class="q-item-price${neg?' neg':''}">${it.incl?'Incl':(neg?'−':'+')+fmt(Math.abs(it.price))}</div></div>`; });
+    items.forEach(it=>{
+      const neg=it.price<0; const ql=it.qty>1?` ×${it.qty}`:'';
+      const priceStr=it.incl?'Incl':(neg?'−':'+')+fmt(Math.abs(it.price));
+      const dealerCostStr=(dealerMode&&it.dealerUnit!=null&&!it.incl)?`<div class="q-item-dealer">Cost: ${(it.price<0?'−':'')+'$'+Math.abs(it.dealerUnit*(it.qty||1)).toLocaleString('en-AU')}</div>`:'';
+      const marginHtml=(dealerMode&&it.dealerUnit!=null&&!it.incl&&it.msrpUnit!=null)?fmtMargin(it.msrpUnit,it.dealerUnit,it.qty):'';
+      const priceBlock=dealerMode?`<div class="q-item-prices"><div class="q-item-price${neg?' neg':''}">${priceStr}</div>${dealerCostStr}${marginHtml}</div>`:`<div class="q-item-price${neg?' neg':''}">${priceStr}</div>`;
+      html+=`<div class="q-item${dealerMode?' dealer-view':''}"><div class="q-item-name">${it.name}${ql}</div>${priceBlock}</div>`;
+    });
   }
   qi.innerHTML=html; qt.style.display='block';
   $('baseTotal').textContent=fmtFull(base);
@@ -1793,6 +2193,26 @@ function renderQuote() {
   $('grandTotal').textContent=fmtFull(grand);
   $('grandRow').className=`tot-row grand ${brand()}`;
   $('printBtn').className=`action-btn btn-print${series==='axis'?' axis-brand':series==='response'?' response-brand':''}`;
+
+  // Dealer margin summary
+  const marginRowEl=$('marginSummaryRow');
+  if(dealerMode && dealerBase!=null){
+    const dealerTotal=dealerBase+dealerOptsTotal+DELIVERY_CHARGE;
+    const msrpExGst=grand/(1+GST_RATE);
+    const grossDollar=msrpExGst-dealerTotal;
+    const grossPct=grossDollar/msrpExGst;
+    const mc=marginClass(grossPct);
+    marginRowEl.style.display='block';
+    $('marginPct').textContent=(grossPct*100).toFixed(1)+'%';
+    $('marginPct').className=`tot-val ${mc}`;
+    $('marginDollar').textContent=(grossDollar>=0?'+':'−')+'$'+Math.abs(Math.round(grossDollar)).toLocaleString('en-AU');
+    $('marginDollar').className=`margin-sub ${mc}`;
+    $('dealerCostRow').style.display='block';
+    $('dealerCostVal').textContent=fmtFull(dealerTotal);
+  } else {
+    marginRowEl.style.display='none';
+    $('dealerCostRow').style.display='none';
+  }
 }
 
 function renderAll() {
