@@ -338,7 +338,11 @@
   ═══════════════════════════════════════════════════════════ */
   @media print {
     body { background:white !important; color:black !important; }
-    .pw-screen,.header,.series-tabs,.model-selector,.options-panel,.quote-actions,.landing-view,.modal-overlay,.settings-panel { display:none !important; }
+    .pw-screen,.header,.series-tabs,.model-selector,.options-panel,.quote-actions,
+    .landing-view,.modal-overlay,.settings-panel,.ss-config-notice,
+    .dealer-toggle-row,.dealer-pin-overlay,
+    .qcb-edit,
+    #dealerPriceRow,#marginSummaryRow,#dealerCostRow { display:none !important; }
     .main { grid-template-columns:1fr; }
     .quote-panel { position:static; max-height:none; border:none; background:white !important; box-shadow:none; }
     .quote-customer-bar { background:#eef3f8 !important; }
@@ -1363,9 +1367,9 @@ function makeTrailerCats(n) {
       { name: 'Trailer: Two Tone Paint (Deluxe trailer model only)', msrp: fill(983), paintGroup:'trailer' },
     ]},
     { name: 'Trailer — Guard & Step Options', items: [
-      { name: 'Trailer: Deluxe Upgrade - Steps & Premium Soft Grip Decking on Steps & Guards', msrp: fill(2566), naForSeries: ['axis'] },
+      { name: 'Trailer: Deluxe Upgrade - Steps & Premium Soft Grip Decking on Steps & Guards', msrp: fill(2566), naForSeries: ['axis'], providesKey:'trailer_deluxe' },
       { name: 'Trailer: Diamond Matting - Guards (N/A on Deluxe)', msrp: fill(314) },
-      { name: 'Trailer: Diamond Matting - Steps x4', msrp: fill(0), std: fill(true) },
+      { name: 'Trailer: Diamond Matting - Steps x4', msrp: fill(0), std: fill(true), deselectedByKey:'trailer_deluxe' },
     ]},
     { name: 'Trailer — Brake & Axle Options', items: [
       { name: 'Trailer: Load Sharing Axles (Rocker Spring)', msrp: fill(1846), stdModels: ['21LX','22LSV','23LSV','23MXZ','T220','A225'], stdPrice: true },
@@ -2013,6 +2017,24 @@ function autoSelectStd() {
   });
 }
 
+// Re-evaluate deselectedByKey items: if their blocking key is no longer provided,
+// re-add them to sel if they are std. Called after every selection change.
+function syncDeselectedStd() {
+  const { providedKeys } = computeGroupStates();
+  const s = data[series];
+  const modelName = s.models[modelIdx];
+  s.categories.forEach((cat,ci) => {
+    cat.items.forEach((item,ii) => {
+      if (!item.deselectedByKey) return;
+      const key = `${ci}-${ii}`;
+      const isStd = (item.std && item.std[modelIdx]) || (item.stdModels && item.stdModels.includes(modelName));
+      if (!providedKeys.has(item.deselectedByKey) && isStd && !sel.has(key)) {
+        sel.set(key, 1); // blocking key gone — restore std selection
+      }
+    });
+  });
+}
+
 // ════════════════════════════════════════════════════════════
 // GROUP STATES
 // ════════════════════════════════════════════════════════════
@@ -2150,6 +2172,11 @@ function renderOptions() {
       if (!isNA && item.naForModels && item.naForModels[series] && item.naForModels[series].includes(modelIdx)) { isNA=true; }
       if (!isNA && item.requiresKey && !providedKeys.has(item.requiresKey)) { isNA=true; naReason='dep'; }
       if (!isNA && item.blockedByKey && providedKeys.has(item.blockedByKey)) { isNA=true; naReason='excl'; }
+      if (!isNA && item.deselectedByKey && providedKeys.has(item.deselectedByKey)) {
+        // Silently deselect (including std) and hide from quote — show as N/A
+        if (sel.has(key)) sel.delete(key);
+        isNA=true; naReason='excl';
+      }
       if (!isNA && isGroupBlocked(item,key)) { isNA=true; naReason='excl'; }
       if (isNA && sel.has(key) && !isStd) sel.delete(key);
 
@@ -2287,6 +2314,7 @@ function renderAll() {
   const tabs=document.querySelectorAll('.series-tab');
   const mi={wakesetter:0,axis:1,response:2};
   if(mi[series]!==undefined) tabs[mi[series]].classList.add('active');
+  syncDeselectedStd();
   renderCustomerBar();
   renderModelSelector();
   renderOptions();
@@ -2377,10 +2405,18 @@ function clearAll() {
 function printQuote() {
   const brandLabel = series==='axis'?'Axis Wake Boats':'Malibu Boats';
   $('printBrand').textContent=`${brandLabel} — MY26 Quote`;
-  $('printDate').textContent=`Prepared: ${new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'})} · MSRP (inc. GST)`;
+  $('printDate').textContent=`Prepared: ${new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'})}`;
   const parts=[customer.name,customer.mobile,customer.email,customer.postcode?'PC: '+customer.postcode:''].filter(Boolean);
   $('printCust').textContent=parts.length?'Customer: '+parts.join(' · '):'';
+  // Ensure dealer rows are hidden before printing
+  const dpRow=$('dealerPriceRow'), msRow=$('marginSummaryRow');
+  const dpWas=dpRow?dpRow.style.display:'', msWas=msRow?msRow.style.display:'';
+  if(dpRow) dpRow.style.display='none';
+  if(msRow) msRow.style.display='none';
   window.print();
+  // Restore dealer rows after print dialog
+  if(dpRow) dpRow.style.display=dpWas;
+  if(msRow) msRow.style.display=msWas;
 }
 
 // ════════════════════════════════════════════════════════════
